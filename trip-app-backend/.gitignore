@@ -13,3 +13,6 @@ target/
 
 # logs
 *.log
+
+# documentation
+docs
