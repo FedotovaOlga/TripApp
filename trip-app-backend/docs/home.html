@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TripApp — Home</title>
+  <style>
+    :root{
+      --bg:#0b1220; --panel:#0f1a2f; --panel2:#101f3a; --text:#e7eefc; --muted:#9fb0d0;
+      --border:rgba(255,255,255,.10); --accent:#4aa3ff; --good:#35d07f; --warn:#ffce4a;
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#071022, #0b1220 35%);color:var(--text)}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1160px;margin:0 auto;padding:20px}
+    header{position:sticky;top:0;background:rgba(7,16,34,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:10}
+    .topbar{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:14px 20px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#7c5cff);box-shadow:0 10px 25px rgba(74,163,255,.25)}
+    .brand h1{font-size:16px;margin:0}
+    .nav{display:flex;gap:8px;flex-wrap:wrap}
+    .pill{padding:8px 12px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:13px}
+    .pill.active{border-color:rgba(74,163,255,.6);color:var(--text);background:rgba(74,163,255,.12)}
+    .actions{display:flex;gap:10px;align-items:center}
+    .btn{padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);font-weight:600;font-size:13px}
+    .btn.primary{background:linear-gradient(135deg,var(--accent),#7c5cff);border-color:transparent}
+    .btn.ghost{background:transparent}
+    .grid{display:grid;grid-template-columns:1.3fr .7fr;gap:18px;margin-top:18px}
+    @media (max-width: 980px){.grid{grid-template-columns:1fr}}
+    .panel{background:rgba(15,26,47,.85);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+    .hero{display:flex;gap:16px;align-items:flex-start;justify-content:space-between}
+    .hero h2{margin:0 0 6px 0;font-size:22px}
+    .hero p{margin:0;color:var(--muted);line-height:1.45}
+    .search{margin-top:14px;display:grid;grid-template-columns:1.2fr .8fr .7fr .7fr;gap:10px}
+    @media (max-width: 980px){.search{grid-template-columns:1fr 1fr}}
+    @media (max-width: 560px){.search{grid-template-columns:1fr}}
+    .field label{display:block;color:var(--muted);font-size:12px;margin:0 0 6px}
+    .input, select{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);outline:none}
+    .row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:14px}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{padding:7px 10px;border-radius:999px;border:1px solid var(--border);color:var(--muted);font-size:12px}
+    .chip.good{border-color:rgba(53,208,127,.35);color:#c9ffe1;background:rgba(53,208,127,.10)}
+    .chip.paid{border-color:rgba(255,206,74,.35);color:#fff2c4;background:rgba(255,206,74,.10)}
+    .list{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+    .card{display:grid;grid-template-columns:160px 1fr;gap:14px;padding:14px;border-radius:16px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02))}
+    @media (max-width: 560px){.card{grid-template-columns:1fr}}
+    .thumb{height:108px;border-radius:14px;background:linear-gradient(135deg,rgba(74,163,255,.25),rgba(124,92,255,.18));border:1px solid rgba(255,255,255,.08)}
+    .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .title{font-size:16px;font-weight:800;margin:0 0 6px}
+    .sub{color:var(--muted);margin:0;font-size:13px;line-height:1.4}
+    .card .cta{display:flex;gap:10px;align-items:center;margin-top:10px}
+    .cta .btn{padding:9px 12px}
+    .side h3{margin:0 0 10px;font-size:16px}
+    .mini{display:flex;gap:12px;padding:12px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.03);margin-top:10px}
+    .avatar{width:42px;height:42px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
+    footer{margin:26px 0 6px;color:var(--muted);font-size:12px;text-align:center}
+  </style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>TripApp</h1>
+        <div style="color:var(--muted);font-size:12px;">Find & join outdoor events near you</div>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Primary">
+      <a class="pill active" href="#">Home</a>
+      <a class="pill" href="#">Create event</a>
+      <a class="pill" href="#">My events</a>
+      <a class="pill" href="#">Profile</a>
+      <a class="pill" href="#">Admin</a>
+    </nav>
+    <div class="actions">
+      <a class="btn ghost" href="#">Sign in</a>
+      <a class="btn primary" href="#">Create account</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel">
+    <div class="hero">
+      <div>
+        <h2>Discover hikes, walks, theatre nights & guided trips</h2>
+        <p>Search by location, date, category and price. Free events require registration; paid tours require booking and payment.</p>
+      </div>
+      <div class="chips" aria-label="Quick filters">
+        <span class="chip good">FREE</span>
+        <span class="chip paid">PAID</span>
+        <span class="chip">Today</span>
+        <span class="chip">This weekend</span>
+      </div>
+    </div>
+
+    <div class="search" role="search" aria-label="Search events">
+      <div class="field">
+        <label>Location</label>
+        <input class="input" placeholder="City or place (e.g. Poitiers)" />
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select>
+          <option>All categories</option>
+          <option>Hiking</option>
+          <option>Walk</option>
+          <option>Theatre</option>
+          <option>Travel</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input class="input" placeholder="Any date" />
+      </div>
+      <div class="field">
+        <label>Type</label>
+        <select>
+          <option>All</option>
+          <option>FREE</option>
+          <option>PAID</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="chips">
+        <span class="chip">Radius: 30 km</span>
+        <span class="chip">Difficulty: medium</span>
+        <span class="chip">Price ≤ 25€</span>
+      </div>
+      <button class="btn primary">Search</button>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <h3 style="margin:0;font-size:16px;">Events near you</h3>
+        <div style="color:var(--muted);font-size:12px;">Showing 12 results</div>
+      </div>
+
+      <div class="list">
+        <article class="card">
+          <div class="thumb" aria-hidden="true"></div>
+          <div>
+            <div class="meta">
+              <span class="chip good">FREE</span>
+              <span class="chip">Hiking</span>
+              <span class="chip">Sat 10:00</span>
+              <span class="chip">Spots: 7/12</span>
+            </div>
+            <h4 class="title">Forest Loop — Medium</h4>
+            <p class="sub">Start point visible after approval. Organizer requires a social profile link for safety.</p>
+            <div class="cta">
+              <a class="btn" href="#">View details</a>
+              <a class="btn primary" href="#">Register</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="thumb" aria-hidden="true"></div>
+          <div>
+            <div class="meta">
+              <span class="chip paid">PAID</span>
+              <span class="chip">Guided tour</span>
+              <span class="chip">Sun 09:00</span>
+              <span class="chip">From 35€</span>
+            </div>
+            <h4 class="title">Guided cliff walk — Photo spots</h4>
+            <p class="sub">Booking requires online payment. Cancellation policy applies (partial refund possible).</p>
+            <div class="cta">
+              <a class="btn" href="#">View details</a>
+              <a class="btn primary" href="#">Book & pay</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="thumb" aria-hidden="true"></div>
+          <div>
+            <div class="meta">
+              <span class="chip good">FREE</span>
+              <span class="chip">Theatre</span>
+              <span class="chip">Fri 20:30</span>
+              <span class="chip">Spots: 18/20</span>
+            </div>
+            <h4 class="title">Impro theatre night — join the group</h4>
+            <p class="sub">Meet locals & new friends. Group chat opens after registration.</p>
+            <div class="cta">
+              <a class="btn" href="#">View details</a>
+              <a class="btn primary" href="#">Register</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <aside class="panel side">
+      <h3>Quick actions</h3>
+      <div class="mini">
+        <div class="avatar"></div>
+        <div>
+          <div style="font-weight:800;">Complete your profile</div>
+          <div style="color:var(--muted);font-size:12px;line-height:1.4;margin-top:2px;">
+            Add a bio and interests to get better matches.
+          </div>
+          <div style="margin-top:10px;">
+            <a class="btn" href="#">Open profile</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mini">
+        <div class="avatar"></div>
+        <div>
+          <div style="font-weight:800;">Create an event</div>
+          <div style="color:var(--muted);font-size:12px;line-height:1.4;margin-top:2px;">
+            Free meetup or paid guided tour.
+          </div>
+          <div style="margin-top:10px;">
+            <a class="btn primary" href="#">Create</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mini">
+        <div class="avatar"></div>
+        <div>
+          <div style="font-weight:800;">Upcoming</div>
+          <div style="color:var(--muted);font-size:12px;line-height:1.4;margin-top:2px;">
+            You have 1 pending approval and 1 paid booking.
+          </div>
+          <div class="chips" style="margin-top:10px;">
+            <span class="chip">Pending</span>
+            <span class="chip paid">Paid</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer>TripApp — UI mock HTML for Web-to-Figma conversion</footer>
+</main>
+</body>
+</html>
