@@ -5,11 +5,11 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.trip_app_backend.models.User;
-import java.util.List;
+import java.util.Optional;
 
 
 public interface UserRepository extends JpaRepository<User, UUID> {
     
-    List<User> findByEmail(String email);
+    Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
 }
