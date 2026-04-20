@@ -108,3 +108,7 @@ $RECYCLE.BIN/
 
 #Environment variables
 .env*
+
+# JWT Keys
+**/resources/jwt/
+*.pem

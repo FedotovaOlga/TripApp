@@ -15,9 +15,9 @@ public class RegisterRequestDto {
     @NotBlank
     private String email;
     @NotBlank
-    @Size(min = 8, max = 100, message = "Le mot de passe doit contenir au moins 8 caractères")
+    @Size(min = 8, max = 100)
     private String password;
     @NotBlank
-    @Size(min = 1, max = 100, message = "Le nom doit contenir entre 1 et 100 caractères")
+    @Size(min = 1, max = 100)
     private String displayName;
 }
