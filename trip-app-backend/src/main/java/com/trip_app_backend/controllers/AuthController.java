@@ -13,14 +13,16 @@ import com.trip_app_backend.dto.RegisterRequestDto;
 import com.trip_app_backend.services.AuthService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/auth")
+// @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-
+    
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
