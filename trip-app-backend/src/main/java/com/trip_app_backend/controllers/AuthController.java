@@ -13,14 +13,14 @@ import com.trip_app_backend.dto.RegisterRequestDto;
 import com.trip_app_backend.services.AuthService;
 
 import jakarta.validation.Valid;
-
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/auth")
+
 public class AuthController {
     private final AuthService authService;
-
+    
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
