@@ -4,7 +4,6 @@ import { environment } from '../../environments/environment.development';
 import { Observable } from 'rxjs/internal/Observable';
 import { Trip } from '../models/trip-model';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -15,5 +14,9 @@ export class TripService {
 
   findAll(): Observable<Trip[]> {
     return this.httpClient.get<Trip[]>(this.backendUrl);
+  }
+
+  save(trip: Omit<Trip, 'id' | 'creatorId' | 'creatorName' | 'status'>): Observable<Trip> {
+    return this.httpClient.post<Trip>(this.backendUrl, trip);
   }
 }

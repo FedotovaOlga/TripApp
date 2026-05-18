@@ -8,7 +8,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (authService.user() && !req.url.endsWith('/auth/refresh')) {
     req = req.clone({
       setHeaders: {
-        Authorisation: `Bearer ${authService.user()!.accessToken}`
+        Authorization: `Bearer ${authService.user()!.accessToken}`
       }
     });
   }
@@ -20,7 +20,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       switchMap(_ => {
         req = req.clone({
           setHeaders: {
-            Authirization: `Bearer ${authService.user()!.accessToken}`
+            Authorization: `Bearer ${authService.user()!.accessToken}`
           }
         });
         return next(req);

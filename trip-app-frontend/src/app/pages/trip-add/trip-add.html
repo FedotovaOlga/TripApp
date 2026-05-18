@@ -1,1 +1,121 @@
-<p>trip-add works!</p>
+<h1>Nouveau Voyage</h1>
+
+<form>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Titre</mat-label>
+        <input matInput placeholder="Un titre pour votre voyage" [formField]="tripForm.title"/>
+        @if (tripForm.title().invalid() && (tripForm.title().touched() || tripForm.title().dirty())) {
+          <mat-error>
+            @for (error of tripForm.title().errors(); track $index) {
+              <div>{{error.message}}</div>
+            }
+          </mat-error>
+        }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput placeholder="Une description de votre voyage" [formField]="tripForm.description"></textarea>
+        @if (tripForm.description().invalid() && (tripForm.description().touched() || tripForm.description().dirty())) {
+          <mat-error>
+            @for (error of tripForm.description().errors(); track $index) {
+              <div>{{error.message}}</div>
+            }
+          </mat-error>
+        }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Date de début</mat-label>
+        <input matInput type="datetime-local" [formField]="tripForm.startAt"/>
+        @if (tripForm.startAt().invalid() && (tripForm.startAt().touched() || tripForm.startAt().dirty())) {
+          <mat-error>
+            @for (error of tripForm.startAt().errors(); track $index) {
+              <div>{{error.message}}</div>
+            }
+          </mat-error>
+        }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Date de fin</mat-label>
+        <input matInput type="datetime-local" [formField]="tripForm.endAt"/>
+        @if (tripForm.endAt().invalid() && (tripForm.endAt().touched() || tripForm.endAt().dirty())) {
+          <mat-error>
+            @for (error of tripForm.endAt().errors(); track $index) {
+              <div>{{error.message}}</div>
+            }
+          </mat-error>
+        }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Lieu</mat-label>
+        <input matInput placeholder="Ex: Col de la Schlucht" [formField]="tripForm.locationLabel"/>
+        @if (tripForm.locationLabel().invalid() && (tripForm.locationLabel().touched() || tripForm.locationLabel().dirty())) {
+          <mat-error>
+            @for (error of tripForm.locationLabel().errors(); track $index) {
+              <div>{{error.message}}</div>
+            }
+          </mat-error>
+        }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Adresse</mat-label>
+        <input matInput placeholder="Adresse" [formField]="tripForm.address"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Ville</mat-label>
+        <input matInput placeholder="Ville" [formField]="tripForm.city"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Pays</mat-label>
+        <input matInput placeholder="Pays" [formField]="tripForm.country"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Code postal</mat-label>
+        <input matInput placeholder="Code postal" [formField]="tripForm.postalCode"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Capacité</mat-label>
+        <input matInput type="number" [formField]="tripForm.capacity"/>
+        @if (tripForm.capacity().invalid() && (tripForm.capacity().touched() || tripForm.capacity().dirty())) {
+          <mat-error>
+            @for (error of tripForm.capacity().errors(); track $index) {
+              <div>{{error.message}}</div>
+            }
+          </mat-error>
+        }
+    </mat-form-field>
+
+    <mat-checkbox [formField]="tripForm.isPaid">Voyage payant</mat-checkbox>
+
+    @if (trip().isPaid) {
+        <mat-form-field appearance="outline">
+            <mat-label>Prix</mat-label>
+            <input matInput type="number" placeholder="Prix en €" [formField]="tripForm.price"/>
+            @if (tripForm.price().invalid() && (tripForm.price().touched() || tripForm.price().dirty())) {
+              <mat-error>
+                @for (error of tripForm.price().errors(); track $index) {
+              <div>{{error.message}}</div>
+                }
+              </mat-error>
+            }
+        </mat-form-field>
+    }
+    
+    <button
+        type="button"
+        mat-button="filled"
+        (click)="onSubmit()"
+        [disabled]="status() === 'submitting'">
+        Créer le voyage
+    </button>
+
+</form>

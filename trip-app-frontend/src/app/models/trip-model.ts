@@ -4,8 +4,10 @@ export interface Trip {
   creatorName: string;
   title: string;
   description: string;
-  startAt: Date;
-  endAt: Date;
+  // startAt: Date;
+  // endAt: Date;
+  startAt: string;
+  endAt: string;
   locationLabel: string;
   address: string;
   city: string;
