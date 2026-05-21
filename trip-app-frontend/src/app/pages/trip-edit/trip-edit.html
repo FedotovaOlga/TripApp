@@ -1,4 +1,10 @@
-<h1>Nouveau Voyage</h1>
+@if (tripFromBackend.isLoading()) {
+  <p>Chargement...</p>
+} @else if (tripFromBackend.error()) {
+  <p>Erreur lors du chargement du voyage</p>
+} @else if (tripFromBackend.hasValue()) {
+
+<h1>Modifier un voyage</h1>
 
 <form>
 
@@ -25,7 +31,6 @@
           </mat-error>
         }
     </mat-form-field>
-
 
     <mat-form-field appearance="outline">
     <mat-label>Dates de voyage</mat-label>
@@ -127,13 +132,16 @@
             }
         </mat-form-field>
     }
-    
+
     <button
         type="button"
         mat-button="filled"
         (click)="onSubmit()"
         [disabled]="status() === 'submitting'">
-        Créer le voyage
+        Modifier le voyage
     </button>
 
 </form>
+
+
+}

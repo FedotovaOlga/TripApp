@@ -12,7 +12,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
   styleUrl: './trip-list.scss',
 })
 export class TripList {
-// [x: string]: any;
   readonly tripService = inject(TripService);
   readonly trips: Signal<Trip[] | undefined> = toSignal(this.tripService.findAll());
 }

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, input, linkedSignal, signal } from '@angular/core';
 import { TripService } from '../../services/trip-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -10,37 +10,31 @@ import { MatAnchor } from "@angular/material/button";
 import {MatDatepickerModule} from '@angular/material/datepicker';
 
 @Component({
-  selector: 'app-trip-add',
+  selector: 'app-trip-edit',
   imports: [MatFormFieldModule, MatInputModule, FormField, MatCheckboxModule, MatAnchor, MatDatepickerModule],
-  templateUrl: './trip-add.html',
-  styleUrl: './trip-add.scss',
+  templateUrl: './trip-edit.html',
+  styleUrl: './trip-edit.scss',
 })
-export class TripAdd {
+export class TripEdit {
 
   private readonly tripService = inject(TripService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
 
-  trip = signal({
-  title: '',
-  description: '',
-  startAt: '',
-  endAt: '',
-  startTime: '',
-  endTime: '',
-  locationLabel: '',
-  address: '',
-  city: '',
-  country: '',
-  postalCode: '',
-  capacity: 0,
-  isPaid: false,
-  price: 0,
-  });
+  id = input.required<string>();
+  tripFromBackend = this.tripService.findByIdWithResource(this.id);
+  trip = linkedSignal(() => ({
+    ...this.tripFromBackend.value(),
+    startAt: this.tripFromBackend.value() ? new Date(this.tripFromBackend.value().startAt) : null,
+    endAt: this.tripFromBackend.value() ? new Date(this.tripFromBackend.value().endAt) : null,
+    startTime: this.tripFromBackend.value() ? new Date(this.tripFromBackend.value().startAt).toISOString().substring(11, 16) : '',
+    endTime: this.tripFromBackend.value() ? new Date(this.tripFromBackend.value().endAt).toISOString().substring(11, 16) : '',
+  }))
+
   status = signal<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   tripForm = form(this.trip, schema => {
-    required(schema.title, { message: 'Le titre est obligatoire' });
+    required(schema.title , { message: 'Le titre est obligatoire' });
     minLength(schema.title, 5, { message: 'Le titre doit faire au moins 5 caractères' });
     required(schema.startAt, { message: 'La date de début est obligatoire' });
     required(schema.endAt, { message: 'La date de fin est obligatoire' });
@@ -83,24 +77,28 @@ export class TripAdd {
 
   onSubmit() {
     submit(this.tripForm, async () => {
+              console.log("start:" + `${this.trip().startAt.toISOString().substring(0, 10)}T${this.trip().startTime}:00`);
+              console.log("end:" + `${this.trip().endAt.toISOString().substring(0, 10)}T${this.trip().endTime}:00`);
+              
+        
       const tripData = {
         ...this.trip(),
-        startAt: new Date(`${this.trip().startAt}T${this.trip().startTime}`).toISOString(),
-        endAt: new Date(`${this.trip().endAt}T${this.trip().endTime}`).toISOString()
+        startAt: new Date(`${this.trip().startAt.toISOString().substring(0, 10)}T${this.trip().startTime}:00`).toISOString(),
+        endAt: new Date(`${this.trip().endAt.toISOString().substring(0, 10)}T${this.trip().endTime}:00`).toISOString()
       };
       this.status.set('submitting');
-      this.snackBar.open('Création en cours...', 'Fermer');
-      this.tripService.save(tripData).subscribe({
-        next: (savedTrip) => {
+      this.snackBar.open('Modification en cours...', 'Fermer');
+      this.tripService.update(tripData).subscribe({
+        next: (modifiedTrip) => {
           this.status.set('success');
-          this.snackBar.open('Voyage créé avec succès !', 'Fermer', { duration: 2000 });
+          this.snackBar.open('Voyage modifié avec succès !', 'Fermer', { duration: 2000 });
           setTimeout(() => {
-            this.router.navigate(['/trips']);
+            this.router.navigate(['/my-trips']);
           }, 2000);
         },
         error: (error) => {
           this.status.set('error');
-          this.snackBar.open('Erreur lors de la création du voyage', 'Fermer', { duration: 2000 });
+          this.snackBar.open('Erreur lors de la modification du voyage', 'Fermer', { duration: 2000 });
         }
       })
     });

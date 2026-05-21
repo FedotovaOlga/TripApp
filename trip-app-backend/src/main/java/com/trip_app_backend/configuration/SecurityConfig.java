@@ -54,9 +54,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/trips").authenticated()
-                        // .anyRequest().authenticated())
-                .anyRequest().permitAll())
+                        .requestMatchers(HttpMethod.GET, "/trips").permitAll()
+                        .anyRequest().authenticated())
                 // connexion sans état : aucune donnée enregistrée en session pour les requêtes
                 .sessionManagement(s ->
                 s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
