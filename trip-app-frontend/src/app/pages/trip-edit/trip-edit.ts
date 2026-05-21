@@ -8,10 +8,12 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { MatAnchor } from "@angular/material/button";
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatTimepickerModule} from '@angular/material/timepicker';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-trip-edit',
-  imports: [MatFormFieldModule, MatInputModule, FormField, MatCheckboxModule, MatAnchor, MatDatepickerModule],
+  imports: [MatFormFieldModule, MatInputModule, FormField, MatCheckboxModule, MatAnchor, MatDatepickerModule, MatTimepickerModule],
   templateUrl: './trip-edit.html',
   styleUrl: './trip-edit.scss',
 })
@@ -25,10 +27,8 @@ export class TripEdit {
   tripFromBackend = this.tripService.findByIdWithResource(this.id);
   trip = linkedSignal(() => ({
     ...this.tripFromBackend.value(),
-    startAt: this.tripFromBackend.value() ? new Date(this.tripFromBackend.value().startAt) : null,
-    endAt: this.tripFromBackend.value() ? new Date(this.tripFromBackend.value().endAt) : null,
-    startTime: this.tripFromBackend.value() ? new Date(this.tripFromBackend.value().startAt).toISOString().substring(11, 16) : '',
-    endTime: this.tripFromBackend.value() ? new Date(this.tripFromBackend.value().endAt).toISOString().substring(11, 16) : '',
+      startAt: new Date(this.tripFromBackend.value()?.startAt),
+      endAt: new Date(this.tripFromBackend.value()?.endAt),
   }))
 
   status = signal<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -77,14 +77,10 @@ export class TripEdit {
 
   onSubmit() {
     submit(this.tripForm, async () => {
-              console.log("start:" + `${this.trip().startAt.toISOString().substring(0, 10)}T${this.trip().startTime}:00`);
-              console.log("end:" + `${this.trip().endAt.toISOString().substring(0, 10)}T${this.trip().endTime}:00`);
-              
-        
       const tripData = {
         ...this.trip(),
-        startAt: new Date(`${this.trip().startAt.toISOString().substring(0, 10)}T${this.trip().startTime}:00`).toISOString(),
-        endAt: new Date(`${this.trip().endAt.toISOString().substring(0, 10)}T${this.trip().endTime}:00`).toISOString()
+        startAt: this.trip().startAt.toISOString(),
+        endAt: this.trip().endAt.toISOString(),
       };
       this.status.set('submitting');
       this.snackBar.open('Modification en cours...', 'Fermer');

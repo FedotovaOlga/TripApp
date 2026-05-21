@@ -8,10 +8,11 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { MatAnchor } from "@angular/material/button";
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatTimepickerModule} from '@angular/material/timepicker';
 
 @Component({
   selector: 'app-trip-add',
-  imports: [MatFormFieldModule, MatInputModule, FormField, MatCheckboxModule, MatAnchor, MatDatepickerModule],
+  imports: [MatFormFieldModule, MatInputModule, FormField, MatCheckboxModule, MatAnchor, MatDatepickerModule, MatTimepickerModule],
   templateUrl: './trip-add.html',
   styleUrl: './trip-add.scss',
 })
@@ -26,8 +27,6 @@ export class TripAdd {
   description: '',
   startAt: '',
   endAt: '',
-  startTime: '',
-  endTime: '',
   locationLabel: '',
   address: '',
   city: '',
@@ -85,8 +84,10 @@ export class TripAdd {
     submit(this.tripForm, async () => {
       const tripData = {
         ...this.trip(),
-        startAt: new Date(`${this.trip().startAt}T${this.trip().startTime}`).toISOString(),
-        endAt: new Date(`${this.trip().endAt}T${this.trip().endTime}`).toISOString()
+        // startAt: new Date(`${this.trip().startAt}T${this.trip().startTime}`).toISOString(),
+        // endAt: new Date(`${this.trip().endAt}T${this.trip().endTime}`).toISOString()
+        // startAt: this.trip().startAt.to
+        // endAt: this.trip().endAt.toISOString(),
       };
       this.status.set('submitting');
       this.snackBar.open('Création en cours...', 'Fermer');
