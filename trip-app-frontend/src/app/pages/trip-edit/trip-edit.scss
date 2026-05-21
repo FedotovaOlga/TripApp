@@ -1,0 +1,16 @@
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.date-time-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.date-time-row mat-form-field {
+  flex: 1;
+}

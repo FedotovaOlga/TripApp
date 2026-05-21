@@ -1,3 +1,11 @@
+declare global {
+    interface Window {
+        _env: {
+            backendUrl: string;
+        };
+    }
+}
+
 export const environment = {
-  backendUrl: 'http://localhost:8080'
+    backendUrl: window._env?.backendUrl || 'http://localhost:8080/api'
 };

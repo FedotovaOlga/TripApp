@@ -1,0 +1,19 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <button matMiniFab aria-label="Example icon button with a menu icon">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>TripApp</span>
+
+    <button matButton routerLink="/trips">Trips</button>
+    @if (!user()) {
+      <button matButton="tonal" routerLink="/register">Register</button>
+      <button matButton="tonal" routerLink="/login">Login</button>
+    } @else {
+      <span>Hello {{user()?.name}} !</span>
+      <button matButton routerLink="/trips/add">Créer un voyage</button>
+      <button matButton routerLink="/my-trips">Mes voyages</button>
+      <button matButton="tonal" (click)="authService.logout()">Logout</button>
+    }
+  </mat-toolbar-row>
+</mat-toolbar>
