@@ -44,6 +44,7 @@ export class TripAdd {
     required(schema.startAt, { message: 'La date de début est obligatoire' });
     required(schema.endAt, { message: 'La date de fin est obligatoire' });
     required(schema.locationLabel, { message: 'Le lieu est obligatoire' });
+    required(schema.address, { message: 'L\'adresse est obligatoire' });
     required(schema.capacity, { message: 'La capacité est obligatoire' });
     min(schema.capacity, 2, { message: 'La capacité doit être d\'au moins 2 personnes' });
     validate(schema.price, ({value, valueOf}) => {

@@ -1,7 +1,6 @@
 import { Component, inject, signal, Signal } from '@angular/core';
 import { TripService } from '../../services/trip-service';
 import { Trip } from '../../models/trip-model';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -45,8 +44,6 @@ export class MyTrips {
             totalElements: currentTrips.totalElements - 1
           });
         }
-        // this.trips.update(trips => trips!.filter(trip => trip.id !== tripId));
-
       },
       error: (err) => {
         alert('Une erreur est survenue lors de la suppression du voyage : ' + err.message);

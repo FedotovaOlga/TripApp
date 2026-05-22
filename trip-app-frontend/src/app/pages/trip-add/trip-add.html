@@ -8,7 +8,7 @@
     @if (tripForm.title().invalid() && (tripForm.title().touched() || tripForm.title().dirty())) {
     <mat-error>
       @for (error of tripForm.title().errors(); track $index) {
-      <div>{{error.message}}</div>
+      {{error.message}}
       }
     </mat-error>
     }
@@ -20,7 +20,7 @@
     @if (tripForm.description().invalid() && (tripForm.description().touched() || tripForm.description().dirty())) {
     <mat-error>
       @for (error of tripForm.description().errors(); track $index) {
-      <div>{{error.message}}</div>
+      {{error.message}}
       }
     </mat-error>
     }
@@ -35,7 +35,7 @@
       @if (tripForm.startAt().invalid() && (tripForm.startAt().touched() || tripForm.startAt().dirty())) {
       <mat-error>
         @for (error of tripForm.startAt().errors(); track $index) {
-        <div>{{error.message}}</div>
+        {{error.message}}
         }
       </mat-error>
       }
@@ -58,19 +58,20 @@
       @if (tripForm.endAt().invalid() && (tripForm.endAt().touched() || tripForm.endAt().dirty())) {
       <mat-error>
         @for (error of tripForm.endAt().errors(); track $index) {
-        <div>{{error.message}}</div>
+        {{error.message}}
         }
       </mat-error>
       }
     </mat-form-field>
+    
+    <mat-form-field appearance="outline">
+      <mat-label>Heure de fin</mat-label>
+      <input matInput [matTimepicker]="endTimepicker" [formField]="tripForm.endAt">
+      <mat-timepicker #endTimepicker />
+      <mat-timepicker-toggle [for]="endTimepicker" matSuffix />
+    </mat-form-field>
   </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Heure de fin</mat-label>
-    <input matInput [matTimepicker]="endTimepicker" [formField]="tripForm.endAt">
-    <mat-timepicker #endTimepicker />
-    <mat-timepicker-toggle [for]="endTimepicker" matSuffix />
-  </mat-form-field>
   <!-- 
 
     <mat-form-field appearance="outline">
@@ -84,7 +85,7 @@
     @if (tripForm.startAt().invalid() && (tripForm.startAt().touched() || tripForm.startAt().dirty())) {
       <mat-error>
         @for (error of tripForm.startAt().errors(); track $index) {
-          <div>{{error.message}}</div>
+          {{error.message}}
         }
       </mat-error>
     }
@@ -96,7 +97,7 @@
     @if (tripForm.startTime().invalid() && (tripForm.startTime().touched() || tripForm.startTime().dirty())) {
       <mat-error>
         @for (error of tripForm.startTime().errors(); track $index) {
-          <div>{{error.message}}</div>
+          {{error.message}}
         }
       </mat-error>
     }
@@ -108,7 +109,7 @@
     @if (tripForm.endTime().invalid() && (tripForm.endTime().touched() || tripForm.endTime().dirty())) {
       <mat-error>
         @for (error of tripForm.endTime().errors(); track $index) {
-          <div>{{error.message}}</div>
+          {{error.message}}
         }
       </mat-error>
     }
@@ -121,7 +122,7 @@
     {
     <mat-error>
       @for (error of tripForm.locationLabel().errors(); track $index) {
-      <div>{{error.message}}</div>
+      {{error.message}}
       }
     </mat-error>
     }
@@ -153,7 +154,7 @@
     @if (tripForm.capacity().invalid() && (tripForm.capacity().touched() || tripForm.capacity().dirty())) {
     <mat-error>
       @for (error of tripForm.capacity().errors(); track $index) {
-      <div>{{error.message}}</div>
+      {{error.message}}
       }
     </mat-error>
     }
@@ -168,7 +169,7 @@
     @if (tripForm.price().invalid() && (tripForm.price().touched() || tripForm.price().dirty())) {
     <mat-error>
       @for (error of tripForm.price().errors(); track $index) {
-      <div>{{error.message}}</div>
+      {{error.message}}
       }
     </mat-error>
     }

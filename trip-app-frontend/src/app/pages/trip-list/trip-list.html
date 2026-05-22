@@ -33,7 +33,7 @@
             <p>👥 {{ trip.capacity }} places</p>
           </div>
           <div class="card-footer">
-            <button class="btn btn-success w-100">Voir les détails</button>
+            <button matButton [routerLink]="['/trips', trip.id]" class="btn btn-success w-100">Voir les détails</button>
           </div>
         </div>
       </div>
