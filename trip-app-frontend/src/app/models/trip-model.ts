@@ -14,5 +14,6 @@ export interface Trip {
   capacity: number;
   isPaid: boolean;
   price: number;
+  imageUrl: string;
   status: 'DRAFT' | 'PUBLISHED' | 'CANCELLED' | 'COMPLETED';
 }

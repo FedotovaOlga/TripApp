@@ -4,15 +4,17 @@
 <p>Error loading trips: {{ trips.error() }}</p>
 } @else {
 
-<div class="page-container">
+  <a mat-button routerLink="/trips">← Liste des voyages</a>
+  <div class="page-container">
   <h1>Mes brouillons</h1>
 
   @for (trip of trips.value()?.content; track trip.id) {
-    <mat-card>
+    <mat-card class="trip-card">
       <mat-card-header>
         <mat-card-title>{{ trip.title }}</mat-card-title>
         <mat-card-subtitle>{{ trip.locationLabel }}</mat-card-subtitle>
       </mat-card-header>
+      <img mat-card-image [src]="getFile(trip)" alt="Trip image">
       <mat-card-content>
         <p>{{ trip.startAt | date:'dd/MM/yyyy' }} → {{ trip.endAt | date:'dd/MM/yyyy' }}</p>
         <p>{{ trip.capacity }} places</p>
@@ -30,6 +32,6 @@
               [pageSizeOptions]="[1, 2, 5, 10, 25, 100]"
               [pageIndex]="pageIndex()"
               (page)="handlePageEvent($event)">
-</mat-paginator>
+  </mat-paginator>
 </div>
 }

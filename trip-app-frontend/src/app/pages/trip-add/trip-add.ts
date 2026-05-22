@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { TripService } from '../../services/trip-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { form, minLength, required, submit, validate, FormField, min } from '@angular/forms/signals';
 import {MatCheckboxModule} from '@angular/material/checkbox'
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -12,7 +12,7 @@ import {MatTimepickerModule} from '@angular/material/timepicker';
 
 @Component({
   selector: 'app-trip-add',
-  imports: [MatFormFieldModule, MatInputModule, FormField, MatCheckboxModule, MatAnchor, MatDatepickerModule, MatTimepickerModule],
+  imports: [MatFormFieldModule, MatInputModule, FormField, MatCheckboxModule, MatAnchor, MatDatepickerModule, MatTimepickerModule, RouterLink],
   templateUrl: './trip-add.html',
   styleUrl: './trip-add.scss',
 })
@@ -36,6 +36,7 @@ export class TripAdd {
   isPaid: false,
   price: 0,
   });
+  file = signal(undefined as File | undefined);
   status = signal<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   tripForm = form(this.trip, schema => {
@@ -81,18 +82,21 @@ export class TripAdd {
     });
   });
 
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.file.set(input.files[0]);
+    }
+  }
+
   onSubmit() {
     submit(this.tripForm, async () => {
       const tripData = {
         ...this.trip(),
-        // startAt: new Date(`${this.trip().startAt}T${this.trip().startTime}`).toISOString(),
-        // endAt: new Date(`${this.trip().endAt}T${this.trip().endTime}`).toISOString()
-        // startAt: this.trip().startAt.to
-        // endAt: this.trip().endAt.toISOString(),
       };
       this.status.set('submitting');
       this.snackBar.open('Création en cours...', 'Fermer');
-      this.tripService.save(tripData).subscribe({
+      this.tripService.save(tripData, this.file()).subscribe({
         next: (savedTrip) => {
           this.status.set('success');
           this.snackBar.open('Voyage créé avec succès !', 'Fermer', { duration: 2000 });

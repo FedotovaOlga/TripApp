@@ -1,12 +1,12 @@
 import { Component, inject, signal, Signal } from '@angular/core';
 import { TripService } from '../../services/trip-service';
 import { Trip } from '../../models/trip-model';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, Location } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { httpResource } from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 interface PageResponse<T> {
@@ -25,8 +25,7 @@ interface PageResponse<T> {
 })
 export class MyTrips {
   readonly tripService = inject(TripService);
-  // readonly trips: Signal <Trip[] | undefined> = toSignal(this.tripService.findMine());
-
+  
   pageSize = signal(2);
   pageIndex = signal(0);
 
@@ -54,6 +53,10 @@ export class MyTrips {
   handlePageEvent(e: PageEvent) {
     this.pageSize.set(e.pageSize);
     this.pageIndex.set(e.pageIndex);
+  }
+
+  getFile(trip: Trip): string {
+    return (trip.imageUrl ? `${environment.backendUrl}/files/${trip.imageUrl}` : 'default-trip.jpg');
   }
 
 }

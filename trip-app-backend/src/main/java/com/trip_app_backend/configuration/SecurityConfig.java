@@ -41,6 +41,9 @@ public class SecurityConfig {
 	@Value("${rsa.private-key}")
 	RSAPrivateKey privateKey;
 
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -55,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers(HttpMethod.GET, "/trips").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/files/**").permitAll()
                         .anyRequest().authenticated())
                 // connexion sans état : aucune donnée enregistrée en session pour les requêtes
                 .sessionManagement(s ->
@@ -74,7 +78,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedOrigins(List.of(frontendUrl));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
 

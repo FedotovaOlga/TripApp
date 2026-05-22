@@ -26,7 +26,8 @@ public record TripResponseDto(
     boolean isPaid,
     BigDecimal price,
     TripStatus status,
-    String difficulty) {
+    String difficulty,
+    String imageUrl) {
 
     public static TripResponseDto fromEntity(Trip trip) {
         return new TripResponseDto(
@@ -47,7 +48,8 @@ public record TripResponseDto(
             trip.isPaid(),
             trip.getPrice(),
             trip.getStatus(),
-            trip.getDifficulty()
+            trip.getDifficulty(),
+            trip.getImageUrl()
         );
     };
 }

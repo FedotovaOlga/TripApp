@@ -77,6 +77,8 @@ public class Trip {
 
     private String difficulty;
 
+    private String imageUrl;
+
     @OneToMany(mappedBy = "trip")
     private List<TripMessage> messages;
 

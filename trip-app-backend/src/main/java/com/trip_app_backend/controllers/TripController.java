@@ -1,5 +1,6 @@
 package com.trip_app_backend.controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,10 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.trip_app_backend.dto.CreateTripRequestDto;
 import com.trip_app_backend.dto.TripResponseDto;
@@ -32,8 +34,8 @@ public class TripController {
     private final TripService tripService;
 
     @PostMapping
-    public TripResponseDto createTrip(@RequestBody @Valid CreateTripRequestDto request, @AuthenticationPrincipal Jwt jwt) {
-        return tripService.createTrip(request, UUID.fromString(jwt.getSubject()));
+    public TripResponseDto createTrip(@RequestPart("trip") @Valid CreateTripRequestDto request, @AuthenticationPrincipal Jwt jwt, @RequestPart("file") MultipartFile file) throws IOException {
+        return tripService.createTrip(request, UUID.fromString(jwt.getSubject()), file);
     }
 
     @GetMapping
@@ -43,9 +45,9 @@ public class TripController {
 
     @GetMapping("/me")
     public Page<TripResponseDto> getMyTrips(
-      @AuthenticationPrincipal Jwt jwt,
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "10") int size
+        @AuthenticationPrincipal Jwt jwt,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
     ) {
         return tripService.getMyTrips(PageRequest.of(page, size), UUID.fromString(jwt.getSubject()));
     }
@@ -56,12 +58,12 @@ public class TripController {
     }
 
     @PutMapping("/{id}")
-    public TripResponseDto editTrip(@PathVariable UUID id, @RequestBody @Valid CreateTripRequestDto request, @AuthenticationPrincipal Jwt jwt) {
-        return tripService.editTrip(request, id, UUID.fromString(jwt.getSubject()));
+    public TripResponseDto editTrip(@PathVariable UUID id, @RequestPart("trip") @Valid CreateTripRequestDto request, @AuthenticationPrincipal Jwt jwt, @RequestPart("file") MultipartFile file) throws IOException {
+        return tripService.editTrip(request, id, UUID.fromString(jwt.getSubject()), file);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTrip(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+    public void deleteTrip(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) throws IOException {
         tripService.deleteTrip(id, UUID.fromString(jwt.getSubject()));
     }
 

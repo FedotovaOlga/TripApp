@@ -1,6 +1,6 @@
-<h1>Nouveau Voyage</h1>
-
+<a mat-button routerLink="/trips">← Liste des voyages</a>
 <form>
+  <h1>Nouveau Voyage</h1>
 
   <mat-form-field appearance="outline">
     <mat-label>Titre</mat-label>
@@ -72,49 +72,6 @@
     </mat-form-field>
   </div>
 
-  <!-- 
-
-    <mat-form-field appearance="outline">
-    <mat-label>Dates de voyage</mat-label>
-    <mat-date-range-input [rangePicker]="picker">
-      <input matStartDate placeholder="Date de début" [formField]="tripForm.startAt">
-      <input matEndDate placeholder="Date de fin" [formField]="tripForm.endAt">
-    </mat-date-range-input>
-    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker></mat-date-range-picker>
-    @if (tripForm.startAt().invalid() && (tripForm.startAt().touched() || tripForm.startAt().dirty())) {
-      <mat-error>
-        @for (error of tripForm.startAt().errors(); track $index) {
-          {{error.message}}
-        }
-      </mat-error>
-    }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-    <mat-label>Heure de début</mat-label>
-    <input matInput type="time" [formField]="tripForm.startTime"/>
-    @if (tripForm.startTime().invalid() && (tripForm.startTime().touched() || tripForm.startTime().dirty())) {
-      <mat-error>
-        @for (error of tripForm.startTime().errors(); track $index) {
-          {{error.message}}
-        }
-      </mat-error>
-    }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-    <mat-label>Heure de fin</mat-label>
-    <input matInput type="time" [formField]="tripForm.endTime"/>
-    @if (tripForm.endTime().invalid() && (tripForm.endTime().touched() || tripForm.endTime().dirty())) {
-      <mat-error>
-        @for (error of tripForm.endTime().errors(); track $index) {
-          {{error.message}}
-        }
-      </mat-error>
-    }
-    </mat-form-field> -->
-
   <mat-form-field appearance="outline">
     <mat-label>Lieu</mat-label>
     <input matInput placeholder="Ex: Col de la Schlucht" [formField]="tripForm.locationLabel" />
@@ -180,6 +137,11 @@
     }
   </mat-form-field>
   }
+
+    <div>
+      <label>Image de voyage</label>
+      <input type="file" (change)="onFileSelected($event)" />
+    </div>
 
   <button type="button" mat-button="filled" (click)="onSubmit()" [disabled]="status() === 'submitting'">
     Créer le voyage

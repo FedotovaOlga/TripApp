@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { map, Observable, tap } from 'rxjs';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 

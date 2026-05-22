@@ -4,6 +4,7 @@
 <p>Erreur lors du chargement du voyage</p>
 } @else if (tripFromBackend.hasValue()) {
 
+<a mat-button routerLink="/my-trips">← Retour</a>
 <h1>Modifier un voyage</h1>
 
 <form>
@@ -143,6 +144,19 @@
     }
   </mat-form-field>
   }
+
+  
+  @if (trip().imageUrl) {
+  <div class="current-image">
+    <p>Image actuelle :</p>
+    <img mat-card-image [src]="getFile(trip().imageUrl)" alt="Trip image">
+  </div>
+  }
+
+  <div>
+    <label>Image de voyage</label>
+    <input type="file" (change)="onFileSelected($event)" />
+  </div>
 
   <button type="button" mat-button="filled" (click)="onSubmit()" [disabled]="status() === 'submitting'">
     Modifier le voyage

@@ -1,6 +1,6 @@
 import { HttpClient, httpResource, HttpResourceRef } from '@angular/common/http';
 import { inject, Injectable, Signal } from '@angular/core';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
 import { Trip } from '../models/trip-model';
 
@@ -16,23 +16,33 @@ export class TripService {
     return this.httpClient.get<Trip[]>(this.backendUrl);
   }
 
-  save(trip: Omit<Trip, 'id' | 'creatorId' | 'creatorName' | 'status'>): Observable<Trip> {
-    return this.httpClient.post<Trip>(this.backendUrl, trip);
-  }
-
   findMine(): Observable<Trip[]> {
     return this.httpClient.get<Trip[]>(`${this.backendUrl}/me`);
   }
 
-  update(trip: Trip): Observable<Trip> {
-    return this.httpClient.put<Trip>(`${this.backendUrl}/${trip.id}`, trip);
+  findByIdWithResource(id: Signal<string>): HttpResourceRef<Trip > {
+    return httpResource<Trip>(() => `${this.backendUrl}/${id()}`) as HttpResourceRef<Trip>;
+  }
+
+  save(trip: Omit<Trip, 'id' | 'creatorId' | 'creatorName' | 'status' | 'imageUrl'>, file?: File): Observable<Trip> {
+    const formData = new FormData();
+    formData.append('trip', new Blob([JSON.stringify(trip)], { type: 'application/json' }));
+    if (file) {
+      formData.append('file', file);
+    }
+    return this.httpClient.post<Trip>(this.backendUrl, formData);
+  }
+
+  update(trip: Trip, file?: File): Observable<Trip> {
+    const formData = new FormData();
+    formData.append('trip', new Blob([JSON.stringify(trip)], { type: 'application/json' }));
+    if (file) {
+      formData.append('file', file);
+    }
+    return this.httpClient.put<Trip>(`${this.backendUrl}/${trip.id}`, formData);
   }
 
   delete(id: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.backendUrl}/${id}`);
-  }
-
-  findByIdWithResource(id: Signal<string>): HttpResourceRef<Trip > {
-    return httpResource<Trip>(() => `${this.backendUrl}/${id()}`) as HttpResourceRef<Trip>;
   }
 }

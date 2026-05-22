@@ -1,7 +1,7 @@
 import { Component, inject, input, linkedSignal, signal } from '@angular/core';
 import { TripService } from '../../services/trip-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { form, minLength, required, submit, validate, FormField, min } from '@angular/forms/signals';
 import {MatCheckboxModule} from '@angular/material/checkbox'
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -9,11 +9,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatAnchor } from "@angular/material/button";
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatTimepickerModule} from '@angular/material/timepicker';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-trip-edit',
-  imports: [MatFormFieldModule, MatInputModule, FormField, MatCheckboxModule, MatAnchor, MatDatepickerModule, MatTimepickerModule],
+  imports: [MatFormFieldModule, MatInputModule, FormField, MatCheckboxModule, MatAnchor, MatDatepickerModule, MatTimepickerModule, RouterLink],
   templateUrl: './trip-edit.html',
   styleUrl: './trip-edit.scss',
 })
@@ -32,6 +32,7 @@ export class TripEdit {
   }))
 
   status = signal<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  file = signal(undefined as File | undefined);
 
   tripForm = form(this.trip, schema => {
     required(schema.title , { message: 'Le titre est obligatoire' });
@@ -76,6 +77,13 @@ export class TripEdit {
     });
   });
 
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.file.set(input.files[0]);
+    }
+  }
+
   onSubmit() {
     submit(this.tripForm, async () => {
       const tripData = {
@@ -85,7 +93,7 @@ export class TripEdit {
       };
       this.status.set('submitting');
       this.snackBar.open('Modification en cours...', 'Fermer');
-      this.tripService.update(tripData).subscribe({
+      this.tripService.update(tripData, this.file()).subscribe({
         next: (modifiedTrip) => {
           this.status.set('success');
           this.snackBar.open('Voyage modifié avec succès !', 'Fermer', { duration: 2000 });
@@ -99,5 +107,9 @@ export class TripEdit {
         }
       })
     });
+  }
+
+  getFile(imageUrl: string | undefined): string {
+      return (imageUrl ? `${environment.backendUrl}/files/${this.trip().imageUrl}` : 'default-trip.jpg');
   }
 }
