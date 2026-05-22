@@ -12,11 +12,11 @@
     <mat-label>Titre</mat-label>
     <input matInput placeholder="Un titre pour votre voyage" [formField]="tripForm.title" />
     @if (tripForm.title().invalid() && (tripForm.title().touched() || tripForm.title().dirty())) {
-      <mat-error>
+    <mat-error>
       @for (error of tripForm.title().errors(); track $index) {
       {{error.message}}
-    }
-  </mat-error>
+      }
+    </mat-error>
     }
   </mat-form-field>
 
@@ -39,14 +39,14 @@
       <mat-datepicker #startDatepicker />
       <mat-datepicker-toggle [for]="startDatepicker" matSuffix />
       @if (tripForm.startAt().invalid() && (tripForm.startAt().touched() || tripForm.startAt().dirty())) {
-        <mat-error>
-          @for (error of tripForm.startAt().errors(); track $index) {
-            {{error.message}}
-          }
-        </mat-error>
+      <mat-error>
+        @for (error of tripForm.startAt().errors(); track $index) {
+        {{error.message}}
+        }
+      </mat-error>
       }
     </mat-form-field>
-  
+
     <mat-form-field appearance="outline">
       <mat-label>Heure de début</mat-label>
       <input matInput [matTimepicker]="startTimepicker" [formField]="tripForm.startAt">
@@ -54,21 +54,19 @@
       <mat-timepicker-toggle [for]="startTimepicker" matSuffix />
     </mat-form-field>
   </div>
-  
+
   <div class="date-time-row">
     <mat-form-field appearance="outline">
       <mat-label>Date de fin</mat-label>
       <input matInput [matDatepicker]="endDatepicker" [formField]="tripForm.endAt">
-      <mat-datepicker
-        #endDatepicker
-        [startAt]="tripForm.startAt().value()"/>
+      <mat-datepicker #endDatepicker [startAt]="tripForm.startAt().value()" />
       <mat-datepicker-toggle [for]="endDatepicker" matSuffix />
       @if (tripForm.endAt().invalid() && (tripForm.endAt().touched() || tripForm.endAt().dirty())) {
-        <mat-error>
-          @for (error of tripForm.endAt().errors(); track $index) {
-            {{error.message}}
-          }
-        </mat-error>
+      <mat-error>
+        @for (error of tripForm.endAt().errors(); track $index) {
+        {{error.message}}
+        }
+      </mat-error>
       }
     </mat-form-field>
 
@@ -94,8 +92,13 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline">
-    <mat-label>Adresse</mat-label>
+    <mat-label>Adresse du point de rendez-vous</mat-label>
     <input matInput placeholder="Adresse" [formField]="tripForm.address" />
+    <mat-error>
+      @for (error of tripForm.address().errors(); track $index) {
+      {{error.message}}
+      }
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline">

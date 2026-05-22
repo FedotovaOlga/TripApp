@@ -63,7 +63,7 @@
       </mat-error>
       }
     </mat-form-field>
-    
+
     <mat-form-field appearance="outline">
       <mat-label>Heure de fin</mat-label>
       <input matInput [matTimepicker]="endTimepicker" [formField]="tripForm.endAt">
@@ -129,8 +129,13 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline">
-    <mat-label>Adresse</mat-label>
+    <mat-label>Adresse du point de rendez-vous</mat-label>
     <input matInput placeholder="Adresse" [formField]="tripForm.address" />
+    <mat-error>
+      @for (error of tripForm.address().errors(); track $index) {
+      {{error.message}}
+      }
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
