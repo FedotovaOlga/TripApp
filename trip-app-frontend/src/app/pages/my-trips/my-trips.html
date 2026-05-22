@@ -1,0 +1,35 @@
+@if (trips.isLoading()) {
+<p>Loading...</p>
+} @else if (trips.error()) {
+<p>Error loading trips: {{ trips.error() }}</p>
+} @else {
+
+<div class="page-container">
+  <h1>Mes brouillons</h1>
+
+  @for (trip of trips.value()?.content; track trip.id) {
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ trip.title }}</mat-card-title>
+        <mat-card-subtitle>{{ trip.locationLabel }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ trip.startAt | date:'dd/MM/yyyy' }} → {{ trip.endAt | date:'dd/MM/yyyy' }}</p>
+        <p>{{ trip.capacity }} places</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button [routerLink]="['/trips', trip.id]">Voir les détails</button>
+        <button mat-button [routerLink]="['/trips', trip.id, 'edit']">Modifier</button>
+        <button mat-button color="warn" (click)="onDelete(trip.id)">Supprimer</button>
+      </mat-card-actions>
+    </mat-card>
+  }
+
+  <mat-paginator [length]="trips.value()?.totalElements"
+              [pageSize]="pageSize()"
+              [pageSizeOptions]="[1, 2, 5, 10, 25, 100]"
+              [pageIndex]="pageIndex()"
+              (page)="handlePageEvent($event)">
+</mat-paginator>
+</div>
+}
