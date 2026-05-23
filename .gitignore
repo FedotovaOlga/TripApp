@@ -112,3 +112,6 @@ $RECYCLE.BIN/
 # JWT Keys
 **/resources/jwt/
 *.pem
+
+# Uploads
+.application-data/*
