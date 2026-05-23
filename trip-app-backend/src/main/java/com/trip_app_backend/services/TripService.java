@@ -84,20 +84,14 @@ public class TripService {
     public Page<TripResponseDto> getMyTrips(PageRequest pageRequest, UUID userUuid) {
         var page = tripRepository.findAllByCreatorId(userUuid, pageRequest);
         return page.map(TripResponseDto::fromEntity);
-        // return tripRepository.findAllByCreatorId(userUuid, pageRequest)
-        // .stream()
-        // .map(TripResponseDto::fromEntity)
-        // .toList();
     }
 
     public TripResponseDto getTrip(UUID id) {
         return tripRepository.findById(id)
-        // .map((trip) -> TripResponseDto.fromEntity(trip))
         .map(TripResponseDto::fromEntity)
         .orElseThrow(() -> new NotFoundException("Voyage introuvable"));
     }
 
-    // @PreAuthorize("@tripService.isTripCreator(#tripId, #userUuid)")
     public TripResponseDto editTrip (CreateTripRequestDto request, UUID tripIUuid, UUID userId, MultipartFile file) throws IOException {
         var trip = tripRepository.findById(tripIUuid)
         .orElseThrow(() -> new NotFoundException("Voyage introuvable"));
@@ -107,12 +101,14 @@ public class TripService {
             throw new BadRequestException("Seuls les voyages en brouillon peuvent être modifiés");
 
         // extracting file from request and saving it
-        String fileName = null;
-        // delete old file
-        deleteFile(trip.getImageUrl());
-
-        try {
+        String fileName = trip.getImageUrl();
+        // if a new file is uploaded, update fileName and delete old file
+        if (file != null && !file.isEmpty()) {
+            deleteFile(trip.getImageUrl());
             fileName = saveFile(file);
+        }
+        
+        try {
             trip.setTitle(request.getTitle());
             trip.setDescription(request.getDescription());
             trip.setStartAt(request.getStartAt());
@@ -134,7 +130,7 @@ public class TripService {
                 try {
                     deleteFile(fileName);
                 } catch (IOException ex) {
-                        // log error but do not throw it, we want to throw the original exception
+                        // log error but do not throw it
                         ex.printStackTrace();
             }
                 throw e;
