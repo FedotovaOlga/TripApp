@@ -153,7 +153,7 @@ public class TripService {
     }
 
     private String saveFile(MultipartFile file) throws IOException {
-        if (file.isEmpty()) {
+        if (file == null || file.isEmpty()) {
             return null;
         }
         String fileExtension = file.getOriginalFilename()

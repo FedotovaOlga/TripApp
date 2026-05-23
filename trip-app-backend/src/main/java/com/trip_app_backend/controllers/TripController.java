@@ -34,7 +34,7 @@ public class TripController {
     private final TripService tripService;
 
     @PostMapping
-    public TripResponseDto createTrip(@RequestPart("trip") @Valid CreateTripRequestDto request, @AuthenticationPrincipal Jwt jwt, @RequestPart("file") MultipartFile file) throws IOException {
+    public TripResponseDto createTrip(@RequestPart("trip") @Valid CreateTripRequestDto request, @AuthenticationPrincipal Jwt jwt, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         return tripService.createTrip(request, UUID.fromString(jwt.getSubject()), file);
     }
 
@@ -58,7 +58,7 @@ public class TripController {
     }
 
     @PutMapping("/{id}")
-    public TripResponseDto editTrip(@PathVariable UUID id, @RequestPart("trip") @Valid CreateTripRequestDto request, @AuthenticationPrincipal Jwt jwt, @RequestPart("file") MultipartFile file) throws IOException {
+    public TripResponseDto editTrip(@PathVariable UUID id, @RequestPart("trip") @Valid CreateTripRequestDto request, @AuthenticationPrincipal Jwt jwt, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         return tripService.editTrip(request, id, UUID.fromString(jwt.getSubject()), file);
     }
 
