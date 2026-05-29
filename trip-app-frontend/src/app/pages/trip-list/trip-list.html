@@ -37,6 +37,7 @@
       </mat-card-content>
       <mat-card-actions>
         <button mat-button [routerLink]="['/trips', trip.id]">Voir les détails</button>
+        <button mat-button (click)="joinTrip(trip.id)">Participer</button>
       </mat-card-actions>
     </mat-card>
   }

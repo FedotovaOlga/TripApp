@@ -137,8 +137,8 @@ public class TripService {
         }
     }
 
-    public void deleteTrip (UUID tripIUuid, UUID userId) throws IOException {
-        var trip = tripRepository.findById(tripIUuid)
+    public void deleteTrip (UUID tripId, UUID userId) throws IOException {
+        var trip = tripRepository.findById(tripId)
         .orElseThrow(() -> new NotFoundException("Voyage introuvable"));
         if (!trip.getCreator().getId().equals(userId))
             throw new BadRequestException("Vous n'êtes pas le créateur de ce voyage");

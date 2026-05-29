@@ -45,4 +45,8 @@ export class TripService {
   delete(id: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.backendUrl}/${id}`);
   }
+
+  joinTrip(tripId: string): Observable <void> {
+    return this.httpClient.post<void>(`${this.backendUrl}/${tripId}/join`, {});
+  }
 }

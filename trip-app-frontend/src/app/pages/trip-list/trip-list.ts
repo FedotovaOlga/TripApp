@@ -43,4 +43,8 @@ export class TripList {
   getFile(trip: Trip): string {
     return (trip.imageUrl ? `${environment.backendUrl}/files/${trip.imageUrl}` : 'default-trip.jpg');
   }
+
+  joinTrip(tripId: string) {
+    this.tripService.
+  }
 }

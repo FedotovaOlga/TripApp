@@ -12,3 +12,4 @@ import com.trip_app_backend.models.Trip;
 public interface TripRepository extends JpaRepository<Trip, UUID> {
     Page<Trip> findAllByCreatorId(UUID creatorId, PageRequest pageRequest);
 }
+
