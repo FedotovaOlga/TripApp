@@ -17,3 +17,11 @@ export interface Trip {
   imageUrl: string;
   status: 'DRAFT' | 'PUBLISHED' | 'CANCELLED' | 'COMPLETED';
 }
+
+export interface PageResponse<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+}

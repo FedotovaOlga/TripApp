@@ -1,7 +1,7 @@
 import { HttpClient, httpResource, HttpResourceRef } from '@angular/common/http';
 import { inject, Injectable, Signal } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
 import { Trip } from '../models/trip-model';
 
 @Injectable({
@@ -44,9 +44,5 @@ export class TripService {
 
   delete(id: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.backendUrl}/${id}`);
-  }
-
-  joinTrip(tripId: string): Observable <void> {
-    return this.httpClient.post<void>(`${this.backendUrl}/${tripId}/join`, {});
   }
 }

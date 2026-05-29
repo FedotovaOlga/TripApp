@@ -1,34 +1,30 @@
 import { Component, inject, signal, Signal } from '@angular/core';
 import { TripService } from '../../services/trip-service';
-import { Trip } from '../../models/trip-model';
-import { CommonModule, DatePipe, Location } from '@angular/common';
+import { PageResponse, Trip } from '../../models/trip-model';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { httpResource } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-
-interface PageResponse<T> {
-  content: T[];
-  totalPages: number;
-  totalElements: number;
-  size: number;
-  number: number;
-}
+import { ParticipationService } from '../../services/participation-service';
 
 @Component({
   selector: 'app-my-trips',
-  imports: [CommonModule, DatePipe, MatCardModule, MatButtonModule, RouterLink, MatPaginatorModule],
+  imports: [CommonModule, DatePipe, MatCardModule, MatButtonModule, RouterLink, MatPaginatorModule, MatTabsModule],
   templateUrl: './my-trips.html',
   styleUrl: './my-trips.scss',
 })
 export class MyTrips {
   readonly tripService = inject(TripService);
-  
+  readonly participationService = inject(ParticipationService);
+
   pageSize = signal(2);
   pageIndex = signal(0);
 
+  joinedTrips = this.participationService.getJoinedWithRessource();
   trips = httpResource<PageResponse<Trip>>(() => `${environment.backendUrl}/trips/me?page=${this.pageIndex()}&size=${this.pageSize()}`);
 
   onDelete (tripId: string) {

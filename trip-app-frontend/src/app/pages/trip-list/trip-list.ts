@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject, signal, Signal } from '@angular/core';
-import { Trip } from '../../models/trip-model';
+import { PageResponse, Trip } from '../../models/trip-model';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { TripService } from '../../services/trip-service';
 import { MatCardModule } from '@angular/material/card';
@@ -9,14 +9,6 @@ import { RouterLink } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { httpResource } from '@angular/common/http';
-
-interface PageResponse<T> {
-  content: T[];
-  totalPages: number;
-  totalElements: number;
-  size: number;
-  number: number;
-}
 
 @Component({
   selector: 'app-trip-list',
@@ -45,6 +37,6 @@ export class TripList {
   }
 
   joinTrip(tripId: string) {
-    this.tripService.
+    return null;
   }
 }
