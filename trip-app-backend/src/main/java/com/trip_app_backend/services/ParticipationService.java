@@ -56,12 +56,11 @@ public class ParticipationService {
         return page.map(p -> TripResponseDto.fromEntity(p.getTrip()));
 	}
 
-    public void deleteParticipation(UUID participationId, UUID userId) throws IOException {
-        var participation = participationRepository.findById(participationId)
+    public void deleteParticipation(UUID tripId, UUID userId) throws IOException {
+        var participation = participationRepository.findByTripIdAndUserId(tripId, userId)
                 .orElseThrow(() -> new NotFoundException("Participation introuvable"));
                 if (!participation.getUser().getId().equals(userId))
                     throw new BadRequestException("Vous n'êtes pas inscrit à ce voyage");
                 participationRepository.delete(participation);
     }
-    
 }

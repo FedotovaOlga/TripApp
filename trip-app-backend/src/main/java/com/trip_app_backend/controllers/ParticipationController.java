@@ -42,8 +42,8 @@ public class ParticipationController {
         return participationService.getJoinedTrips(PageRequest.of(page, size), UUID.fromString(jwt.getSubject()));
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteParticipation(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) throws IOException {
-        participationService.deleteParticipation(id, UUID.fromString(jwt.getSubject()));
+    @DeleteMapping("/{tripId}")
+    public void deleteParticipation(@PathVariable UUID tripId, @AuthenticationPrincipal Jwt jwt) throws IOException {
+        participationService.deleteParticipation(tripId, UUID.fromString(jwt.getSubject()));
     }
 }
