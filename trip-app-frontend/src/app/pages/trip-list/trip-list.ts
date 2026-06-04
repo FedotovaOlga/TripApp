@@ -9,6 +9,8 @@ import { RouterLink } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { httpResource } from '@angular/common/http';
+import { ParticipationService } from '../../services/participation-service';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-trip-list',
@@ -18,14 +20,17 @@ import { httpResource } from '@angular/common/http';
 })
 export class TripList {
   readonly tripService = inject(TripService);
-  // readonly trips: Signal<Trip[] | undefined> = toSignal(this.tripService.findAll());
+  readonly participationService = inject(ParticipationService);
+  readonly authService = inject(AuthService);
 
-  pageSize = signal(2);
+  pageSize = signal(5);
   pageIndex = signal(0);
 
   trips = httpResource<PageResponse<Trip>>(() =>
-    `${environment.backendUrl}/trips/me?page=${this.pageIndex()}&size=${this.pageSize()}`
+    `${environment.backendUrl}/trips?page=${this.pageIndex()}&size=${this.pageSize()}`
 );
+  joinedTrips = this.participationService.getJoinedWithRessource();
+  currentUser = this.authService.user;
 
   handlePageEvent(e: PageEvent) {
     this.pageSize.set(e.pageSize);
@@ -37,6 +42,24 @@ export class TripList {
   }
 
   joinTrip(tripId: string) {
-    return null;
+    this.participationService.joinTrip(tripId).subscribe({
+      next: () => this.joinedTrips.reload(),
+      error: (err) => console.error('Erreur inscription au voyage', err)
+    });
+  }
+
+  leaveTrip(tripId: string) {
+    this.participationService.leaveTrip(tripId).subscribe({
+      next: () => this.joinedTrips.reload(),
+      error: (err) => console.error('Erreur de désinscription au voyage', err)
+    });
+  }
+
+  isCreator(trip: Trip): boolean {
+    return this.currentUser()?.id === trip.creatorId;
+  }
+
+  isJoined(tripId: string) {
+    return this.joinedTrips.value()?.content?.some( t => t.id === tripId) ?? false;
   }
 }

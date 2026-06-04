@@ -13,7 +13,7 @@
       <span>Hello {{user()?.name}} !</span>
       <button matButton routerLink="/trips/add">Créer un voyage</button>
       <button matButton routerLink="/my-trips">Mes voyages</button>
-      <button matButton="tonal" (click)="authService.logout()">Logout</button>
+      <button matButton="tonal" (click)="logout()" redirect>Logout</button>
     }
   </mat-toolbar-row>
 </mat-toolbar>

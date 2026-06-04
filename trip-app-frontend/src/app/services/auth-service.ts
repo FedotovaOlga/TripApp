@@ -9,6 +9,7 @@ interface AuthenticatedUser {
   refreshToken: string;
   name: string;
   role: string;
+  id: string;
 }
 
 interface AuthResponse {
@@ -56,7 +57,8 @@ export class AuthService {
           accessToken,
           refreshToken,
           name: decodedToken.name,
-          role: decodedToken.role
+          role: decodedToken.role,
+          id: decodedToken.sub!
         });
       }),
       map(_ => {})
@@ -76,7 +78,7 @@ export class AuthService {
           accessToken,
           refreshToken,
           name: this.user()!.name,
-          role: this.user()!.role
+          role: this.user()!.role,id: this.user()!.id
         });
       }),
       map(() => {})
