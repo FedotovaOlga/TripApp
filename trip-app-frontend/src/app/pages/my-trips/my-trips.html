@@ -66,11 +66,11 @@
         </mat-card>
       }
 
-      <mat-paginator [length]="trips.value()?.totalElements"
-                  [pageSize]="pageSize()"
+      <mat-paginator [length]="joinedTrips.value()?.totalElements"
+                  [pageSize]="joinedPageSize()"
                   [pageSizeOptions]="[1, 2, 5, 10, 25, 100]"
-                  [pageIndex]="pageIndex()"
-                  (page)="handlePageEvent($event)">
+                  [pageIndex]="joinedPageIndex()"
+                  (page)="handleJoinedPageEvent($event)">
       </mat-paginator>
     </div>
     }

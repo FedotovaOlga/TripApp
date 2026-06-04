@@ -21,11 +21,13 @@ export class MyTrips {
   readonly tripService = inject(TripService);
   readonly participationService = inject(ParticipationService);
 
-  pageSize = signal(2);
+  pageSize = signal(5);
   pageIndex = signal(0);
+  joinedPageSize = signal(5);
+  joinedPageIndex = signal(0);
 
-  joinedTrips = this.participationService.getJoinedWithRessource();
   trips = httpResource<PageResponse<Trip>>(() => `${environment.backendUrl}/trips/me?page=${this.pageIndex()}&size=${this.pageSize()}`);
+  joinedTrips = httpResource<PageResponse<Trip>>(() => `${environment.backendUrl}/participations/joined?page=${this.joinedPageIndex()}&size=${this.joinedPageSize()}`);
 
   onDelete (tripId: string) {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce voyage ?')) return;
@@ -49,6 +51,11 @@ export class MyTrips {
   handlePageEvent(e: PageEvent) {
     this.pageSize.set(e.pageSize);
     this.pageIndex.set(e.pageIndex);
+  }
+
+  handleJoinedPageEvent(e: PageEvent) {
+    this.joinedPageSize.set(e.pageSize);
+    this.joinedPageIndex.set(e.pageIndex);
   }
 
   getFile(trip: Trip): string {
