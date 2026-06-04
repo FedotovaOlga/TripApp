@@ -1,7 +1,6 @@
 package com.trip_app_backend.services;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.trip_app_backend.dto.TripResponseDto;
 import com.trip_app_backend.enums.ParticipationStatus;
-import com.trip_app_backend.enums.TripStatus;
 import com.trip_app_backend.exceptions.BadRequestException;
 import com.trip_app_backend.exceptions.NotFoundException;
 import com.trip_app_backend.models.Participation;
@@ -47,8 +45,6 @@ public class ParticipationService {
                 .requestedAt(Instant.now())
                 .build();
             participationRepository.save(participation);
-
-
     }
 
 	public Page<TripResponseDto> getJoinedTrips(PageRequest pageRequest, UUID userId) {
