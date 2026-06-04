@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -74,11 +73,9 @@ public class TripService {
         }
     }
 
-    public List <TripResponseDto> getAllTrips() {
-        return tripRepository.findAll()
-        .stream()
-        .map(TripResponseDto::fromEntity)
-        .toList();
+    public Page<TripResponseDto> getAllTrips(PageRequest pageRequest) {
+        var page = tripRepository.findAll(pageRequest);
+        return page.map(TripResponseDto::fromEntity);
     }
 
     public Page<TripResponseDto> getMyTrips(PageRequest pageRequest, UUID userUuid) {

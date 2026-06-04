@@ -1,7 +1,6 @@
 package com.trip_app_backend.controllers;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -33,16 +32,14 @@ public class TripController {
 
     private final TripService tripService;
 
-    @PostMapping
-    public TripResponseDto createTrip(@RequestPart("trip") @Valid CreateTripRequestDto request, @AuthenticationPrincipal Jwt jwt, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
-        return tripService.createTrip(request, UUID.fromString(jwt.getSubject()), file);
-    }
-
     @GetMapping
-    public List<TripResponseDto> getAllTrips() {
-        return tripService.getAllTrips();
+    public Page<TripResponseDto> getAllTrips(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        return tripService.getAllTrips(PageRequest.of(page, size));
     }
-
+    
     @GetMapping("/me")
     public Page<TripResponseDto> getMyTrips(
         @AuthenticationPrincipal Jwt jwt,
@@ -51,10 +48,15 @@ public class TripController {
     ) {
         return tripService.getMyTrips(PageRequest.of(page, size), UUID.fromString(jwt.getSubject()));
     }
-
+    
     @GetMapping("/{id}")
     public TripResponseDto getTrip(@PathVariable UUID id) {
         return tripService.getTrip(id);
+    }
+    
+    @PostMapping
+    public TripResponseDto createTrip(@RequestPart("trip") @Valid CreateTripRequestDto request, @AuthenticationPrincipal Jwt jwt, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+        return tripService.createTrip(request, UUID.fromString(jwt.getSubject()), file);
     }
 
     @PutMapping("/{id}")
