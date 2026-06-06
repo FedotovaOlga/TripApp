@@ -51,7 +51,7 @@ export class TripList {
   leaveTrip(tripId: string) {
     this.participationService.leaveTrip(tripId).subscribe({
       next: () => this.joinedTrips.reload(),
-      error: (err) => console.error('Erreur de désinscription au voyage', err)
+      error: (err) => console.error('Erreur de désinscription du voyage', err)
     });
   }
 

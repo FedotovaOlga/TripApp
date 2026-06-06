@@ -62,4 +62,15 @@ export class MyTrips {
     return (trip.imageUrl ? `${environment.backendUrl}/files/${trip.imageUrl}` : 'default-trip.jpg');
   }
 
+  leaveTrip(tripId: string) {
+    this.participationService.leaveTrip(tripId).subscribe({
+      next: () => this.joinedTrips.reload(),
+      error: (err) => console.error('Erreur de désinscription du voyage', err)
+    });
+  }
+
+  isJoined(tripId: string) {
+    return this.joinedTrips.value()?.content?.some( t => t.id === tripId) ?? false;
+  }
+
 }

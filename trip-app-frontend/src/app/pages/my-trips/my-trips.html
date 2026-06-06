@@ -62,6 +62,9 @@
           </mat-card-content>
           <mat-card-actions>
             <button mat-button [routerLink]="['/trips', trip.id]">Voir les détails</button>
+            @if (isJoined(trip.id)) {
+          <button mat-button color="warn" (click)="leaveTrip(trip.id)">Se désinscrire</button>
+        }
           </mat-card-actions>
         </mat-card>
       }
