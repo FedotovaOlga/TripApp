@@ -16,6 +16,7 @@ export interface Trip {
   price: number;
   imageUrl: string;
   status: 'DRAFT' | 'PUBLISHED' | 'CANCELLED' | 'COMPLETED';
+  participantCount: number;
 }
 
 export interface PageResponse<T> {

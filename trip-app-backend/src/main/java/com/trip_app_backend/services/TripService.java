@@ -17,6 +17,7 @@ import com.trip_app_backend.enums.TripStatus;
 import com.trip_app_backend.exceptions.BadRequestException;
 import com.trip_app_backend.exceptions.NotFoundException;
 import com.trip_app_backend.models.Trip;
+import com.trip_app_backend.repositories.ParticipationRepository;
 import com.trip_app_backend.repositories.TripRepository;
 import com.trip_app_backend.repositories.UserRepository;
 
@@ -29,6 +30,7 @@ public class TripService {
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
     private final FileService fileService;
+    private final ParticipationRepository participationRepository;
     
     public TripResponseDto createTrip(CreateTripRequestDto request, UUID creatorId, MultipartFile file) throws IOException {
         var creator = userRepository.findById(creatorId)
@@ -61,7 +63,7 @@ public class TripService {
                 .build();
 
                 var saved = tripRepository.save(trip);
-            return TripResponseDto.fromEntity(saved);
+            return TripResponseDto.fromEntity(saved, 0);
         } catch (Exception e) {
             try {
                     deleteFile(fileName);
@@ -75,18 +77,18 @@ public class TripService {
 
     public Page<TripResponseDto> getAllTrips(PageRequest pageRequest) {
         var page = tripRepository.findAllByStatus(TripStatus.PUBLISHED, pageRequest);
-        return page.map(TripResponseDto::fromEntity);
+        return page.map(trip -> TripResponseDto.fromEntity(trip, participationRepository.countByTripId(trip.getId())));
     }
 
     public Page<TripResponseDto> getMyTrips(PageRequest pageRequest, UUID userUuid, TripStatus status) {
         var page = tripRepository.findAllByCreatorIdAndStatus(userUuid, status, pageRequest);
-        return page.map(TripResponseDto::fromEntity);
+        return page.map(trip -> TripResponseDto.fromEntity(trip, participationRepository.countByTripId(trip.getId())));
     }
 
     public TripResponseDto getTrip(UUID id) {
-        return tripRepository.findById(id)
-        .map(TripResponseDto::fromEntity)
+        var trip = tripRepository.findById(id)
         .orElseThrow(() -> new NotFoundException("Voyage introuvable"));
+        return TripResponseDto.fromEntity(trip, participationRepository.countByTripId(trip.getId()));
     }
 
     public TripResponseDto editTrip (CreateTripRequestDto request, UUID tripIUuid, UUID userId, MultipartFile file) throws IOException {
@@ -122,7 +124,7 @@ public class TripService {
             trip.setImageUrl(fileName);
 
             var updated = tripRepository.save(trip);
-            return TripResponseDto.fromEntity(updated);
+            return TripResponseDto.fromEntity(updated, participationRepository.countByTripId(updated.getId()));
         } catch (Exception e) {
                 try {
                     deleteFile(fileName);

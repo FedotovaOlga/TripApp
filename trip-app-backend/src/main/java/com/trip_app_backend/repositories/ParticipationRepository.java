@@ -14,4 +14,6 @@ public interface ParticipationRepository extends JpaRepository<Participation, UU
     boolean existsByTripIdAndUserId(UUID tripId, UUID userId);
     Page<Participation> findAllByUserId(UUID userId, PageRequest pageRequest);
     Optional<Participation> findByTripIdAndUserId(UUID tripId, UUID userId);
+    long countByTripId(UUID tripId);
+
 }

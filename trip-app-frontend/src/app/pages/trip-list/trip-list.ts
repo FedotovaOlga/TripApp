@@ -19,9 +19,8 @@ import { AuthService } from '../../services/auth-service';
   styleUrl: './trip-list.scss',
 })
 export class TripList {
-  readonly tripService = inject(TripService);
-  readonly participationService = inject(ParticipationService);
-  readonly authService = inject(AuthService);
+  private readonly participationService = inject(ParticipationService);
+  private readonly authService = inject(AuthService);
 
   pageSize = signal(5);
   pageIndex = signal(0);
@@ -43,14 +42,20 @@ export class TripList {
 
   joinTrip(tripId: string) {
     this.participationService.joinTrip(tripId).subscribe({
-      next: () => this.joinedTrips.reload(),
+      next: () => {
+        this.joinedTrips.reload(),
+        this.trips.reload();
+      },
       error: (err) => console.error('Erreur inscription au voyage', err)
     });
   }
 
   leaveTrip(tripId: string) {
     this.participationService.leaveTrip(tripId).subscribe({
-      next: () => this.joinedTrips.reload(),
+      next: () => {
+        this.joinedTrips.reload(),
+        this.trips.reload();
+      },
       error: (err) => console.error('Erreur de désinscription du voyage', err)
     });
   }
@@ -62,4 +67,5 @@ export class TripList {
   isJoined(tripId: string) {
     return this.joinedTrips.value()?.content?.some( t => t.id === tripId) ?? false;
   }
+
 }

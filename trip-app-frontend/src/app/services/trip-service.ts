@@ -24,7 +24,7 @@ export class TripService {
     return httpResource<Trip>(() => `${this.backendUrl}/${id()}`) as HttpResourceRef<Trip>;
   }
 
-  save(trip: Omit<Trip, 'id' | 'creatorId' | 'creatorName' | 'status' | 'imageUrl'>, file?: File): Observable<Trip> {
+  save(trip: Omit<Trip, 'id' | 'creatorId' | 'creatorName' | 'status' | 'imageUrl' | 'participantCount'>, file?: File): Observable<Trip> {
     const formData = new FormData();
     formData.append('trip', new Blob([JSON.stringify(trip)], { type: 'application/json' }));
     if (file) {

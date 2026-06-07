@@ -16,7 +16,7 @@
       {{trip.value().description}}
     </p>
     <p>{{trip.value().startAt | date:'dd/MM/yyyy HH:mm'}} → {{trip.value().endAt | date:'dd/MM/yyyy HH:mm'}}</p>
-    <p>{{trip.value().capacity}} places</p>
+    <p>Il reste {{ trip.value().capacity - trip.value().participantCount}} place{{ trip.value().capacity - trip.value().participantCount > 1 ? 's' : '' }} sur {{ trip.value().capacity }}</p>
     <p>{{trip.value().address}}</p>
     <p>Organisé par : {{trip.value().creatorName}}</p>
     @if (trip.value().isPaid) {
@@ -26,7 +26,13 @@
     }
   </mat-card-content>
   <mat-card-actions>
-    <button matButton>S'inscrire</button>
+        @if (currentUser() && !isCreator(trip.value()) && !isJoined(trip.value().id)) {
+          <button mat-button (click)="joinTrip(trip.value().id)">S'inscrire</button>
+        } @else if (!currentUser()) {
+          <button mat-button routerLink="/login">S'inscrire</button>
+        } @else if (isJoined(trip.value().id)) {
+          <button mat-button color="warn" (click)="leaveTrip(trip.value().id)">Se désinscrire</button>
+        }
   </mat-card-actions>
 </mat-card>
 }

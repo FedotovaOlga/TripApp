@@ -33,14 +33,14 @@
       <img mat-card-image [src]="getFile(trip)" alt="Trip image">
       <mat-card-content>
         <p>{{ trip.startAt | date:'dd/MM/yyyy' }} → {{ trip.endAt | date:'dd/MM/yyyy' }}</p>
-        <p>{{ trip.capacity }} places</p>
+        <p>Il reste {{ trip.capacity - trip.participantCount}} place{{ trip.capacity - trip.participantCount > 1 ? 's' : '' }} sur {{ trip.capacity }}</p>
       </mat-card-content>
       <mat-card-actions>
         <button mat-button [routerLink]="['/trips', trip.id]">Voir les détails</button>
         @if (currentUser() && !isCreator(trip) && !isJoined(trip.id)) {
-          <button mat-button (click)="joinTrip(trip.id)">Participer</button>
+          <button mat-button (click)="joinTrip(trip.id)">S'inscrire</button>
         } @else if (!currentUser()) {
-          <button mat-button routerLink="/login">Participer</button>
+          <button mat-button routerLink="/login">S'inscrire</button>
         } @else if (isJoined(trip.id)) {
           <button mat-button color="warn" (click)="leaveTrip(trip.id)">Se désinscrire</button>
         }

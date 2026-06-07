@@ -32,6 +32,10 @@ public class ParticipationService {
         .orElseThrow(() -> new NotFoundException("Voyage introuvable"));
         var user = userRepository.findById(userId)
         .orElseThrow(() -> new NotFoundException("Utilisateur introuvable"));
+        var currentParticipants = participationRepository.countByTripId(tripId);
+        if (currentParticipants >= trip.getCapacity()) {
+            throw new BadRequestException("Ce voyage est complet");
+        }
         if (trip.getCreator().getId().equals(userId)) {
             throw new BadRequestException("Vous ne pouvez pas rejoindre votre propre voyage");
         }
@@ -45,11 +49,15 @@ public class ParticipationService {
                 .requestedAt(Instant.now())
                 .build();
             participationRepository.save(participation);
+            
     }
 
 	public Page<TripResponseDto> getJoinedTrips(PageRequest pageRequest, UUID userId) {
 		var page = participationRepository.findAllByUserId(userId, pageRequest);
-        return page.map(p -> TripResponseDto.fromEntity(p.getTrip()));
+        return page.map(p -> {
+            long count = participationRepository.countByTripId(p.getTrip().getId());
+            return TripResponseDto.fromEntity(p.getTrip(), count);
+        });
 	}
 
     public void deleteParticipation(UUID tripId, UUID userId) throws IOException {

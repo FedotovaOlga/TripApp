@@ -27,9 +27,10 @@ public record TripResponseDto(
     BigDecimal price,
     TripStatus status,
     String difficulty,
-    String imageUrl) {
+    String imageUrl,
+    long participantCount) {
 
-    public static TripResponseDto fromEntity(Trip trip) {
+    public static TripResponseDto fromEntity(Trip trip, long participantCount) {
         return new TripResponseDto(
             trip.getId(),
             trip.getCreator().getId(),
@@ -49,7 +50,8 @@ public record TripResponseDto(
             trip.getPrice(),
             trip.getStatus(),
             trip.getDifficulty(),
-            trip.getImageUrl()
+            trip.getImageUrl(),
+            participantCount
         );
     };
 }
