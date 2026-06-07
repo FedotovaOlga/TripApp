@@ -74,12 +74,12 @@ public class TripService {
     }
 
     public Page<TripResponseDto> getAllTrips(PageRequest pageRequest) {
-        var page = tripRepository.findAll(pageRequest);
+        var page = tripRepository.findAllByStatus(TripStatus.PUBLISHED, pageRequest);
         return page.map(TripResponseDto::fromEntity);
     }
 
-    public Page<TripResponseDto> getMyTrips(PageRequest pageRequest, UUID userUuid) {
-        var page = tripRepository.findAllByCreatorId(userUuid, pageRequest);
+    public Page<TripResponseDto> getMyTrips(PageRequest pageRequest, UUID userUuid, TripStatus status) {
+        var page = tripRepository.findAllByCreatorIdAndStatus(userUuid, status, pageRequest);
         return page.map(TripResponseDto::fromEntity);
     }
 
@@ -143,6 +143,28 @@ public class TripService {
             throw new BadRequestException("Seuls les voyages en brouillon peuvent être supprimés");
         tripRepository.delete(trip);
         Files.deleteIfExists(fileService.getFilePath(trip.getImageUrl()));
+    }
+
+    public void publishTrip (UUID tripId, UUID userId) {
+        var trip = tripRepository.findById(tripId)
+        .orElseThrow(() -> new NotFoundException("Voyage introuvable"));
+        if (!trip.getCreator().getId().equals(userId))
+            throw new BadRequestException("Vous n'êtes pas le créateur de ce voyage");
+        if (!trip.getStatus().equals(TripStatus.DRAFT))
+            throw new BadRequestException("Seuls les voyages en brouillon peuvent être publiés");
+        trip.setStatus(TripStatus.PUBLISHED);
+        tripRepository.save(trip);
+    }
+
+    public void cancelTrip (UUID tripId, UUID userId) {
+        var trip = tripRepository.findById(tripId)
+        .orElseThrow(() -> new NotFoundException("Voyage introuvable"));
+        if (!trip.getCreator().getId().equals(userId))
+            throw new BadRequestException("Vous n'êtes pas le créateur de ce voyage");
+        if (!trip.getStatus().equals(TripStatus.PUBLISHED))
+            throw new BadRequestException("Seuls les voyages publiés peuvent être annulés");
+        trip.setStatus(TripStatus.CANCELLED);
+        tripRepository.save(trip);
     }
 
     private String saveFile(MultipartFile file) throws IOException {

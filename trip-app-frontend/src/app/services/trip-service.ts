@@ -45,4 +45,12 @@ export class TripService {
   delete(id: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.backendUrl}/${id}`);
   }
+
+  publish(id: string): Observable<void> {
+    return this.httpClient.put<void>(this.backendUrl + `/${id}/publish`, {});
+  }
+
+  cancel(id: string): Observable<void> {
+    return this.httpClient.put<void>(this.backendUrl + `/${id}/cancel`, {});
+  }
 }

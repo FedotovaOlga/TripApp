@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.trip_app_backend.dto.CreateTripRequestDto;
 import com.trip_app_backend.dto.TripResponseDto;
+import com.trip_app_backend.enums.TripStatus;
 import com.trip_app_backend.services.TripService;
 
 import jakarta.validation.Valid;
@@ -44,9 +45,10 @@ public class TripController {
     public Page<TripResponseDto> getMyTrips(
         @AuthenticationPrincipal Jwt jwt,
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam TripStatus status
     ) {
-        return tripService.getMyTrips(PageRequest.of(page, size), UUID.fromString(jwt.getSubject()));
+        return tripService.getMyTrips(PageRequest.of(page, size), UUID.fromString(jwt.getSubject()), status);
     }
     
     @GetMapping("/{id}")
@@ -62,6 +64,16 @@ public class TripController {
     @PutMapping("/{id}")
     public TripResponseDto editTrip(@PathVariable UUID id, @RequestPart("trip") @Valid CreateTripRequestDto request, @AuthenticationPrincipal Jwt jwt, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         return tripService.editTrip(request, id, UUID.fromString(jwt.getSubject()), file);
+    }
+
+    @PutMapping("/{id}/publish")
+    public void publishTrip(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        tripService.publishTrip(id, UUID.fromString(jwt.getSubject()));
+    }
+
+    @PutMapping("/{id}/cancel")
+    public void cancelTrip(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        tripService.cancelTrip(id, UUID.fromString(jwt.getSubject()));
     }
 
     @DeleteMapping("/{id}")

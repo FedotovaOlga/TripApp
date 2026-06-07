@@ -10,6 +10,9 @@ import { httpResource } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ParticipationService } from '../../services/participation-service';
+// import { MatIconModule } from "@angular/material/icon";
+// import { MatChipsModule } from '@angular/material/chips';
+
 
 @Component({
   selector: 'app-my-trips',
@@ -25,17 +28,20 @@ export class MyTrips {
   pageIndex = signal(0);
   joinedPageSize = signal(5);
   joinedPageIndex = signal(0);
+  publishedPageSize = signal(5);
+  publishedPageIndex = signal(0);
 
-  trips = httpResource<PageResponse<Trip>>(() => `${environment.backendUrl}/trips/me?page=${this.pageIndex()}&size=${this.pageSize()}`);
+  drafts = httpResource<PageResponse<Trip>>(() => `${environment.backendUrl}/trips/me?status=DRAFT&page=${this.pageIndex()}&size=${this.pageSize()}`);
+  publishedTrips = httpResource<PageResponse<Trip>>(() => `${environment.backendUrl}/trips/me?status=PUBLISHED&page=${this.publishedPageIndex()}&size=${this.publishedPageSize()}`);
   joinedTrips = httpResource<PageResponse<Trip>>(() => `${environment.backendUrl}/participations/joined?page=${this.joinedPageIndex()}&size=${this.joinedPageSize()}`);
 
   onDelete (tripId: string) {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce voyage ?')) return;
     this.tripService.delete(tripId).subscribe({
       next: () => {
-        const currentTrips = this.trips.value();
+        const currentTrips = this.drafts.value();
         if(currentTrips) {
-          this.trips.set({
+          this.drafts.set({
             ...currentTrips,
             content: currentTrips.content.filter(trip => trip.id !== tripId),
             totalElements: currentTrips.totalElements - 1
@@ -48,6 +54,39 @@ export class MyTrips {
     })
   }
 
+  onPublish (tripId: string) {
+    if (!confirm('Êtes-vous sûr de vouloir publier ce voyage ?')) return;
+    this.tripService.publish(tripId).subscribe({
+      next: () => {
+        const currentTrips = this.drafts.value();
+        if(currentTrips) {
+          this.drafts.set({
+            ...currentTrips,
+            content: currentTrips.content.filter(trip => trip.id !== tripId),
+            totalElements: currentTrips.totalElements - 1
+          });
+        }
+        this.publishedTrips.reload();
+      }
+    })
+  }
+
+  onCancel (tripId: string) {
+    if (!confirm('Êtes-vous sûr de vouloir annuler ce voyage ?')) return;
+    this.tripService.cancel(tripId).subscribe({
+      next: () => {
+        const currentTrips = this.publishedTrips.value();
+        if(currentTrips) {
+          this.publishedTrips.set({
+            ...currentTrips,
+            content: currentTrips.content.filter(trip => trip.id !== tripId),
+            totalElements: currentTrips.totalElements - 1
+          });
+        }
+      }
+    })
+  }
+
   handlePageEvent(e: PageEvent) {
     this.pageSize.set(e.pageSize);
     this.pageIndex.set(e.pageIndex);
@@ -56,6 +95,11 @@ export class MyTrips {
   handleJoinedPageEvent(e: PageEvent) {
     this.joinedPageSize.set(e.pageSize);
     this.joinedPageIndex.set(e.pageIndex);
+  }
+
+  handlePublishedPageEvent(e: PageEvent) {
+    this.publishedPageSize.set(e.pageSize);
+    this.publishedPageIndex.set(e.pageIndex);
   }
 
   getFile(trip: Trip): string {
