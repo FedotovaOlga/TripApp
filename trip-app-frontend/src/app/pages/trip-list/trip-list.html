@@ -33,16 +33,26 @@
       <img mat-card-image [src]="getFile(trip)" alt="Trip image">
       <mat-card-content>
         <p>{{ trip.startAt | date:'dd/MM/yyyy' }} → {{ trip.endAt | date:'dd/MM/yyyy' }}</p>
-        <p>Il reste {{ trip.capacity - trip.participantCount}} place{{ trip.capacity - trip.participantCount > 1 ? 's' : '' }} sur {{ trip.capacity }}</p>
+        @if (trip.participantCount >= trip.capacity) {
+          <p><strong>Complet</strong></p>
+        } @else {
+          <p>Il reste {{ trip.capacity - trip.participantCount}} place{{ trip.capacity - trip.participantCount > 1 ? 's' : '' }} sur {{ trip.capacity }}</p>
+        }
       </mat-card-content>
       <mat-card-actions>
         <button mat-button [routerLink]="['/trips', trip.id]">Voir les détails</button>
-        @if (currentUser() && !isCreator(trip) && !isJoined(trip.id)) {
-          <button mat-button (click)="joinTrip(trip.id)">S'inscrire</button>
-        } @else if (!currentUser()) {
-          <button mat-button routerLink="/login">S'inscrire</button>
-        } @else if (isJoined(trip.id)) {
+        @if (isJoined(trip.id)) {
           <button mat-button color="warn" (click)="leaveTrip(trip.id)">Se désinscrire</button>
+        } @else if (trip.participantCount < trip.capacity) {
+          @if (currentUser() && !isCreator(trip) && !isJoined(trip.id)) {
+            <button mat-button (click)="joinTrip(trip.id)">S'inscrire</button>
+          } @else if (!currentUser()) {
+            <button mat-button routerLink="/login">S'inscrire</button>
+          } @else if (isJoined(trip.id)) {
+            <button mat-button color="warn" (click)="leaveTrip(trip.id)">Se désinscrire</button>
+          } @else if (trip.participantCount >= trip.capacity) {
+            <button mat-button disabled>Complet</button>
+          }
         }
       </mat-card-actions>
     </mat-card>

@@ -15,9 +15,18 @@
     <p>
       {{trip.value().description}}
     </p>
-    <p>{{trip.value().startAt | date:'dd/MM/yyyy HH:mm'}} → {{trip.value().endAt | date:'dd/MM/yyyy HH:mm'}}</p>
-    <p>Il reste {{ trip.value().capacity - trip.value().participantCount}} place{{ trip.value().capacity - trip.value().participantCount > 1 ? 's' : '' }} sur {{ trip.value().capacity }}</p>
-    <p>{{trip.value().address}}</p>
+    <p>
+      {{trip.value().startAt | date:'dd/MM/yyyy HH:mm'}} → {{trip.value().endAt | date:'dd/MM/yyyy HH:mm'}}
+    </p>
+    <p>
+      Capacité : {{trip.value().capacity}} personnes
+    </p>
+    @if (trip.value().participantCount >= trip.value().capacity) {
+      <p><strong>Complet</strong></p>
+    } @else {
+        <p>Il reste {{ trip.value().capacity - trip.value().participantCount}} place{{ trip.value().capacity - trip.value().participantCount > 1 ? 's' : '' }} sur {{ trip.value().capacity }}</p>
+      }
+    <p>Point de départ : {{trip.value().address}}</p>
     <p>Organisé par : {{trip.value().creatorName}}</p>
     @if (trip.value().isPaid) {
     <p>Prix : {{trip.value().price}} €</p>
@@ -26,6 +35,9 @@
     }
   </mat-card-content>
   <mat-card-actions>
+    @if (isJoined(trip.value().id)) {
+      <button mat-button color="warn" (click)="leaveTrip(trip.value().id)">Se désinscrire</button>
+    } @else if (trip.value().participantCount < trip.value().capacity) {
         @if (currentUser() && !isCreator(trip.value()) && !isJoined(trip.value().id)) {
           <button mat-button (click)="joinTrip(trip.value().id)">S'inscrire</button>
         } @else if (!currentUser()) {
@@ -33,6 +45,7 @@
         } @else if (isJoined(trip.value().id)) {
           <button mat-button color="warn" (click)="leaveTrip(trip.value().id)">Se désinscrire</button>
         }
+    }
   </mat-card-actions>
 </mat-card>
 }

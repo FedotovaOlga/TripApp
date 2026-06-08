@@ -59,7 +59,11 @@
           <img mat-card-image [src]="getFile(trip)" alt="Trip image">
           <mat-card-content>
             <p>{{ trip.startAt | date:'dd/MM/yyyy' }} → {{ trip.endAt | date:'dd/MM/yyyy' }}</p>
-            <p>Il reste {{ trip.capacity - trip.participantCount}} place{{ trip.capacity - trip.participantCount > 1 ? 's' : '' }} sur {{ trip.capacity }}</p>
+            @if (trip.participantCount >= trip.capacity) {
+              <p><strong>Complet</strong></p>
+            } @else {
+              <p>Il reste {{ trip.capacity - trip.participantCount}} place{{ trip.capacity - trip.participantCount > 1 ? 's' : '' }} sur {{ trip.capacity }}</p>
+            }
           </mat-card-content>
           <mat-card-actions>
             <button mat-button [routerLink]="['/trips', trip.id]">Voir les détails</button>
@@ -100,7 +104,13 @@
           <img mat-card-image [src]="getFile(trip)" alt="Trip image">
           <mat-card-content>
             <p>{{ trip.startAt | date:'dd/MM/yyyy' }} → {{ trip.endAt | date:'dd/MM/yyyy' }}</p>
-            <p>Il reste {{ trip.capacity - trip.participantCount}} place{{ trip.capacity - trip.participantCount > 1 ? 's' : '' }} sur {{ trip.capacity }}</p>
+            @if (!(trip.status === 'CANCELLED')) {
+              @if (trip.participantCount >= trip.capacity) {
+                <p><strong>Complet</strong></p>
+              } @else {
+                <p>Il reste {{ trip.capacity - trip.participantCount}} place{{ trip.capacity - trip.participantCount > 1 ? 's' : '' }} sur {{ trip.capacity }}</p>
+              }
+            }
           </mat-card-content>
           <mat-card-actions>
             <button mat-button [routerLink]="['/trips', trip.id]">Voir les détails</button>
