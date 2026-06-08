@@ -36,18 +36,18 @@ export class Register {
     hideConfirm = signal(true);
 
   registerForm = form(this.registerData, schema => {
-    email(schema.email, { message: 'Email is required' });
-    required(schema.password, { message: 'Password is required' });
-    minLength(schema.password, 8, { message: 'Password must be at least 8 characters long' });
-    pattern(schema.password, /^(?=.*[A-Z])(?=.*\d).+$/, { message: 'Password must contain at least one uppercase letter and one number' });
-    required(schema.displayName, { message: 'Pseudo is required' });
+    email(schema.email, { message: 'Email requis' });
+    required(schema.password, { message: 'Mot de passe requis' });
+    minLength(schema.password, 8, { message: 'Le mot de passe doit contenir au moins 8 caractères' });
+    pattern(schema.password, /^(?=.*[A-Z])(?=.*\d).+$/, { message: 'Le mot de passe doit contenir au moins une majuscule et un chiffre' });
+    required(schema.displayName, { message: 'Pseudo requis' });
     validate(schema.confirmPassword, ({value, valueOf}) => {
       const confirmPassword = value();
       const password = valueOf(schema.password);
       if (confirmPassword !== password) {
         return {
           kind: 'passwordMismatch',
-          message: 'Passwords do not match',
+          message: 'Les mots de passe ne correspondent pas',
         };
       }
       return null;
@@ -58,7 +58,7 @@ export class Register {
   onSubmit() {
     submit(this.registerForm, async () => {
       this.status.set('submitting');
-      this.snackBar.open('Submitting register...', 'Close');
+      this.snackBar.open('Inscription en cours...', 'Fermer');
       var data = {
         email: this.registerData().email,
         password: this.registerData().password,
@@ -67,14 +67,14 @@ export class Register {
       this.authServcie.register(data).subscribe({
         next: () => {
           this.status.set('success');
-          this.snackBar.open('Register submitted successfully', 'Close', { duration: 2000 });
+          this.snackBar.open('Inscription réussie !', 'Fermer', { duration: 2000 });
           setTimeout(() => {
             this.router.navigate(['/login']);
           }, 2000);
         },
         error: () => {
           this.status.set('error');
-          this.snackBar.open('Error submitting register', 'Close', { duration: 2000 });
+          this.snackBar.open('Une erreur est survenue lors de l\'inscription', 'Fermer', { duration: 2000 });
         }
       });
     });

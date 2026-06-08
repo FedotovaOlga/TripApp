@@ -1,9 +1,9 @@
 <mat-tab-group>
   <mat-tab label="Mes brouillons">
     @if (drafts.isLoading()) {
-    <p>Loading...</p>
+    <p>Chargement...</p>
     } @else if (drafts.error()) {
-    <p>Error loading drafts: {{ drafts.error() }}</p>
+    <p>Erreur lors de chargement des brouillons : {{ drafts.error() }}</p>
     } @else {
 
       <a mat-button routerLink="/trips">← Liste des voyages</a>
@@ -41,9 +41,9 @@
   </mat-tab>
     <mat-tab label="Mes voyages publiés">
     @if (publishedTrips.isLoading()) {
-    <p>Loading...</p>
+    <p>Chargement...</p>
     } @else if (publishedTrips.error()) {
-    <p>Error loading published trips: {{ publishedTrips.error() }}</p>
+    <p>Erreur lors de chargement des voyages publiés : {{ publishedTrips.error() }}</p>
     } @else {
 
       <a mat-button routerLink="/trips">← Liste des voyages</a>
@@ -79,9 +79,9 @@
   </mat-tab>
   <mat-tab label="Mes participations">
     @if (joinedTrips.isLoading()) {
-    <p>Loading...</p>
+    <p>Chargement...</p>
     } @else if (joinedTrips.error()) {
-    <p>Error loading joined trips: {{ joinedTrips.error() }}</p>
+    <p>Erreur lors de chargement de vos participations : {{ joinedTrips.error() }}</p>
     } @else {
 
       <a mat-button routerLink="/trips">← Liste des voyages</a>

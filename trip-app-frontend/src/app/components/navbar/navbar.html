@@ -5,15 +5,15 @@
     </button>
     <span>TripApp</span>
 
-    <button matButton routerLink="/trips">Trips</button>
+    <button matButton routerLink="/trips">Liste des voyages</button>
     @if (!user()) {
-      <button matButton="tonal" routerLink="/register">Register</button>
-      <button matButton="tonal" routerLink="/login">Login</button>
+      <button matButton="tonal" routerLink="/register">S'enregistrer</button>
+      <button matButton="tonal" routerLink="/login">Se connecter</button>
     } @else {
-      <span>Hello {{user()?.name}} !</span>
+      <span>Bonjour {{user()?.name}} !</span>
       <button matButton routerLink="/trips/add">Créer un voyage</button>
       <button matButton routerLink="/my-trips">Mes voyages</button>
-      <button matButton="tonal" (click)="logout()" redirect>Logout</button>
+      <button matButton="tonal" (click)="logout()" redirect>Se déconnecter</button>
     }
   </mat-toolbar-row>
 </mat-toolbar>

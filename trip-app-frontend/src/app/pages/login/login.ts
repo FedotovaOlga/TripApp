@@ -26,25 +26,25 @@ export class Login {
   status = signal<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   loginForm = form(this.credentials, schema => {
-    email(schema.email, { message: 'Email is required' });
-    required(schema.password, { message: 'Password is required' });
+    email(schema.email, { message: 'Email requis' });
+    required(schema.password, { message: 'Mot de passe requis' });
   });
 
   onSubmit() {
     submit(this.loginForm, async () => {
       this.status.set('submitting');
-      this.snackBar.open('Submitting credentials...', 'Close');
+      this.snackBar.open('Connexion en cours...', 'Fermer');
       this.authService.login(this.credentials().email, this.credentials().password).subscribe({
         next: () => {
           this.status.set('success');
-          this.snackBar.open('Logged in successfully', 'Close', { duration: 2000 });
+          this.snackBar.open('Connexion réussie', 'Fermer', { duration: 2000 });
           setTimeout(() => {
             this.router.navigate(['/trips']);
           }, 2000);
         },
         error: () => {
           this.status.set('error');
-          this.snackBar.open('Logged in failed', 'Close', { duration: 2000 });
+          this.snackBar.open('Email ou mot de passe incorrect', 'Fermer', { duration: 2000 });
         }
       });
     });

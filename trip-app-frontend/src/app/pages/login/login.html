@@ -1,4 +1,4 @@
-<h1>Login</h1>
+<h1>Connexion</h1>
 
 <form>
 
@@ -15,7 +15,7 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
+        <mat-label>Mot de passe</mat-label>
         <input type="password" matInput [formField]="loginForm.password"/>
         @if (loginForm.password().invalid() && (loginForm.password().touched() || loginForm.password().dirty())) {
             <mat-error>
@@ -32,7 +32,7 @@
         matButton="filled"
         (click)="onSubmit()"
         [disabled]="status() === 'submitting' || (loginForm().invalid() && (loginForm().touched() || loginForm().dirty()))">
-        Login
+        Se connecter
     </button>
 
 </form>
