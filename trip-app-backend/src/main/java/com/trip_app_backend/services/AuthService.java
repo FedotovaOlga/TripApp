@@ -1,11 +1,7 @@
 package com.trip_app_backend.services;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -13,18 +9,12 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.trip_app_backend.dto.AuthResponseDto;
 import com.trip_app_backend.dto.RegisterRequestDto;
 import com.trip_app_backend.enums.Role;
 import com.trip_app_backend.exceptions.BadRequestException;
 import com.trip_app_backend.models.User;
 import com.trip_app_backend.repositories.UserRepository;
-
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Service

@@ -1,0 +1,51 @@
+@if (trip.isLoading()) {
+<p>Chargement...</p>
+} @else if (trip.error()) {
+<p>Erreur lors du chargement du voyage</p>
+} @else if (trip.hasValue()) {
+
+<a mat-button (click)="goBack()">← Retour</a>
+<mat-card class="trip-card" appearance="outlined">
+  <mat-card-header>
+      <mat-card-title>{{trip.value().title}}</mat-card-title>
+      <mat-card-subtitle>{{trip.value().locationLabel}}</mat-card-subtitle>
+  </mat-card-header>
+  <img mat-card-image [src]="getFile(trip.value())" alt="Trip image">
+  <mat-card-content>
+    <p>
+      {{trip.value().description}}
+    </p>
+    <p>
+      {{trip.value().startAt | date:'dd/MM/yyyy HH:mm'}} → {{trip.value().endAt | date:'dd/MM/yyyy HH:mm'}}
+    </p>
+    <p>
+      Capacité : {{trip.value().capacity}} personnes
+    </p>
+    @if (trip.value().participantCount >= trip.value().capacity) {
+      <p><strong>Complet</strong></p>
+    } @else {
+        <p>Il reste {{ trip.value().capacity - trip.value().participantCount}} place{{ trip.value().capacity - trip.value().participantCount > 1 ? 's' : '' }} sur {{ trip.value().capacity }}</p>
+      }
+    <p>Point de départ : {{trip.value().address}}</p>
+    <p>Organisé par : {{trip.value().creatorName}}</p>
+    @if (trip.value().isPaid) {
+    <p>Prix : {{trip.value().price}} €</p>
+    } @else {
+    <p>Gratuit</p>
+    }
+  </mat-card-content>
+  <mat-card-actions>
+    @if (isJoined(trip.value().id)) {
+      <button mat-button color="warn" (click)="leaveTrip(trip.value().id)">Se désinscrire</button>
+    } @else if (trip.value().participantCount < trip.value().capacity) {
+        @if (currentUser() && !isCreator(trip.value()) && !isJoined(trip.value().id)) {
+          <button mat-button (click)="joinTrip(trip.value().id)">S'inscrire</button>
+        } @else if (!currentUser()) {
+          <button mat-button routerLink="/login">S'inscrire</button>
+        } @else if (isJoined(trip.value().id)) {
+          <button mat-button color="warn" (click)="leaveTrip(trip.value().id)">Se désinscrire</button>
+        }
+    }
+  </mat-card-actions>
+</mat-card>
+}

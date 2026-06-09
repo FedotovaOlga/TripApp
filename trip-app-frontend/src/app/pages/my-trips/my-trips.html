@@ -1,0 +1,134 @@
+<mat-tab-group>
+  <mat-tab label="Mes brouillons">
+    @if (drafts.isLoading()) {
+    <p>Chargement...</p>
+    } @else if (drafts.error()) {
+    <p>Erreur lors de chargement des brouillons : {{ drafts.error() }}</p>
+    } @else {
+
+      <a mat-button routerLink="/trips">← Liste des voyages</a>
+      <div class="page-container">
+      <h1>Mes brouillons</h1>
+
+      @for (trip of drafts.value()?.content; track trip.id) {
+        <mat-card class="trip-card">
+          <mat-card-header>
+            <mat-card-title>{{ trip.title }}</mat-card-title>
+            <mat-card-subtitle>{{ trip.locationLabel }}</mat-card-subtitle>
+          </mat-card-header>
+          <img mat-card-image [src]="getFile(trip)" alt="Trip image">
+          <mat-card-content>
+            <p>{{ trip.startAt | date:'dd/MM/yyyy' }} → {{ trip.endAt | date:'dd/MM/yyyy' }}</p>
+            <p>Il reste {{ trip.capacity - trip.participantCount}} place{{ trip.capacity - trip.participantCount > 1 ? 's' : '' }} sur {{ trip.capacity }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button [routerLink]="['/trips', trip.id]">Voir les détails</button>
+            <button mat-button [routerLink]="['/trips', trip.id, 'edit']">Modifier</button>
+            <button mat-button color="warn" (click)="onDelete(trip.id)">Supprimer</button>
+            <button mat-button color="warn" (click)="onPublish(trip.id)">Publier</button>
+          </mat-card-actions>
+        </mat-card>
+      }
+
+      <mat-paginator [length]="drafts.value()?.totalElements"
+                  [pageSize]="pageSize()"
+                  [pageSizeOptions]="[1, 2, 5, 10, 25, 100]"
+                  [pageIndex]="pageIndex()"
+                  (page)="handlePageEvent($event)">
+      </mat-paginator>
+    </div>
+    }
+  </mat-tab>
+    <mat-tab label="Mes voyages publiés">
+    @if (publishedTrips.isLoading()) {
+    <p>Chargement...</p>
+    } @else if (publishedTrips.error()) {
+    <p>Erreur lors de chargement des voyages publiés : {{ publishedTrips.error() }}</p>
+    } @else {
+
+      <a mat-button routerLink="/trips">← Liste des voyages</a>
+      <div class="page-container">
+      <h1>Mes voyages publiés</h1>
+
+      @for (trip of publishedTrips.value()?.content; track trip.id) {
+        <mat-card class="trip-card">
+          <mat-card-header>
+            <mat-card-title>{{ trip.title }}</mat-card-title>
+            <mat-card-subtitle>{{ trip.locationLabel }}</mat-card-subtitle>
+          </mat-card-header>
+          <img mat-card-image [src]="getFile(trip)" alt="Trip image">
+          <mat-card-content>
+            <p>{{ trip.startAt | date:'dd/MM/yyyy' }} → {{ trip.endAt | date:'dd/MM/yyyy' }}</p>
+            @if (trip.participantCount >= trip.capacity) {
+              <p><strong>Complet</strong></p>
+            } @else {
+              <p>Il reste {{ trip.capacity - trip.participantCount}} place{{ trip.capacity - trip.participantCount > 1 ? 's' : '' }} sur {{ trip.capacity }}</p>
+            }
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button [routerLink]="['/trips', trip.id]">Voir les détails</button>
+            <button mat-button color="warn" (click)="onCancel(trip.id)">Annuler</button>
+          </mat-card-actions>
+        </mat-card>
+      }
+
+      <mat-paginator [length]="publishedTrips.value()?.totalElements"
+                  [pageSize]="publishedPageSize()"
+                  [pageSizeOptions]="[1, 2, 5, 10, 25, 100]"
+                  [pageIndex]="publishedPageIndex()"
+                  (page)="handlePublishedPageEvent($event)">
+      </mat-paginator>
+    </div>
+    }
+  </mat-tab>
+  <mat-tab label="Mes participations">
+    @if (joinedTrips.isLoading()) {
+    <p>Chargement...</p>
+    } @else if (joinedTrips.error()) {
+    <p>Erreur lors de chargement de vos participations : {{ joinedTrips.error() }}</p>
+    } @else {
+
+      <a mat-button routerLink="/trips">← Liste des voyages</a>
+      <div class="page-container">
+      <h1>Mes participations</h1>
+
+      @for (trip of joinedTrips.value()?.content; track trip.id) {
+        <mat-card class="trip-card">
+          <mat-card-header>
+            <mat-card-title>{{ trip.title }}</mat-card-title>
+            @if (trip.status === "CANCELLED") {
+              <span class="cancelled-badge">Annulé</span>
+            }
+            <mat-card-subtitle>{{ trip.locationLabel }}</mat-card-subtitle>
+          </mat-card-header>
+          <img mat-card-image [src]="getFile(trip)" alt="Trip image">
+          <mat-card-content>
+            <p>{{ trip.startAt | date:'dd/MM/yyyy' }} → {{ trip.endAt | date:'dd/MM/yyyy' }}</p>
+            @if (!(trip.status === 'CANCELLED')) {
+              @if (trip.participantCount >= trip.capacity) {
+                <p><strong>Complet</strong></p>
+              } @else {
+                <p>Il reste {{ trip.capacity - trip.participantCount}} place{{ trip.capacity - trip.participantCount > 1 ? 's' : '' }} sur {{ trip.capacity }}</p>
+              }
+            }
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button [routerLink]="['/trips', trip.id]">Voir les détails</button>
+            @if (isJoined(trip.id)) {
+          <button mat-button color="warn" (click)="leaveTrip(trip.id)">Se désinscrire</button>
+        }
+          </mat-card-actions>
+        </mat-card>
+      }
+
+      <mat-paginator [length]="joinedTrips.value()?.totalElements"
+                  [pageSize]="joinedPageSize()"
+                  [pageSizeOptions]="[1, 2, 5, 10, 25, 100]"
+                  [pageIndex]="joinedPageIndex()"
+                  (page)="handleJoinedPageEvent($event)">
+      </mat-paginator>
+    </div>
+    }
+  </mat-tab>
+</mat-tab-group>
+

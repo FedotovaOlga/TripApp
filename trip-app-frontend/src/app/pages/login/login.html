@@ -1,0 +1,38 @@
+<h1>Connexion</h1>
+
+<form>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput [formField]="loginForm.email"/>
+        @if (loginForm.email().invalid() && (loginForm.email().touched() || loginForm.email().dirty())) {
+            <mat-error>
+            @for (error of loginForm.email().errors(); track $index; let last = $last) {
+                {{ error.message }} {{ !last ? ', ' : '' }}
+            }
+            </mat-error>
+        }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Mot de passe</mat-label>
+        <input type="password" matInput [formField]="loginForm.password"/>
+        @if (loginForm.password().invalid() && (loginForm.password().touched() || loginForm.password().dirty())) {
+            <mat-error>
+            @for (error of loginForm.password().errors(); track $index; let last = $last) {
+                {{ error.message }} {{ !last ? ', ' : '' }}
+            }
+            </mat-error>
+        }
+    </mat-form-field>
+
+    <button
+        class="submit-btn"
+        type="button"
+        matButton="filled"
+        (click)="onSubmit()"
+        [disabled]="status() === 'submitting' || (loginForm().invalid() && (loginForm().touched() || loginForm().dirty()))">
+        Se connecter
+    </button>
+
+</form>

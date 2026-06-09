@@ -1,0 +1,68 @@
+@if (trips.isLoading()) {
+<p>Chargement...</p>
+} @else if (trips.error()) {
+<p>Erreur lors de chargement des voyages : {{ trips.error() }}</p>
+} @else {
+
+<div class="page-container">
+  <h1>Explorez les voyages à venir</h1>
+  <p class="mat-body-large">Découvrez les trips organisés par notre communauté et trouvez l'aventure qui vous correspond !</p>
+
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="input-group">
+        <span class="material-icons">location_on</span>
+        <input type="text" class="form-control" placeholder="Rechercher par localisation..." />
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="input-group">
+        <span class="material-icons">calendar_today</span>
+        <input class="form-control" placeholder="jj/mm/aaaa" ngbDatepicker #d="ngbDatepicker" />
+        <button class="btn btn-outline-secondary" (click)="d.toggle()">Choisir</button>
+      </div>
+    </div>
+  </div>
+
+  @for (trip of trips.value()?.content; track trip.id) {
+    <mat-card class="trip-card">
+      <mat-card-header>
+        <mat-card-title>{{ trip.title }}</mat-card-title>
+        <mat-card-subtitle>{{ trip.locationLabel }}</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image [src]="getFile(trip)" alt="Trip image">
+      <mat-card-content>
+        <p>{{ trip.startAt | date:'dd/MM/yyyy' }} → {{ trip.endAt | date:'dd/MM/yyyy' }}</p>
+        @if (trip.participantCount >= trip.capacity) {
+          <p><strong>Complet</strong></p>
+        } @else {
+          <p>Il reste {{ trip.capacity - trip.participantCount}} place{{ trip.capacity - trip.participantCount > 1 ? 's' : '' }} sur {{ trip.capacity }}</p>
+        }
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button [routerLink]="['/trips', trip.id]">Voir les détails</button>
+        @if (isJoined(trip.id)) {
+          <button mat-button color="warn" (click)="leaveTrip(trip.id)">Se désinscrire</button>
+        } @else if (trip.participantCount < trip.capacity) {
+          @if (currentUser() && !isCreator(trip) && !isJoined(trip.id)) {
+            <button mat-button (click)="joinTrip(trip.id)">S'inscrire</button>
+          } @else if (!currentUser()) {
+            <button mat-button routerLink="/login">S'inscrire</button>
+          } @else if (isJoined(trip.id)) {
+            <button mat-button color="warn" (click)="leaveTrip(trip.id)">Se désinscrire</button>
+          } @else if (trip.participantCount >= trip.capacity) {
+            <button mat-button disabled>Complet</button>
+          }
+        }
+      </mat-card-actions>
+    </mat-card>
+  }
+
+  <mat-paginator [length]="trips.value()?.totalElements"
+              [pageSize]="pageSize()"
+              [pageSizeOptions]="[1, 2, 5, 10, 25, 100]"
+              [pageIndex]="pageIndex()"
+              (page)="handlePageEvent($event)">
+  </mat-paginator>
+</div>
+}

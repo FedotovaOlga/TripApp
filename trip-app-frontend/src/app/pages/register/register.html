@@ -1,0 +1,70 @@
+<h1>Création de compte</h1>
+
+<form>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput  type="email" placeholder="Votre email" [formField]="registerForm.email"/>
+        @if (registerForm.email().invalid() && (registerForm.email().touched() || registerForm.email().dirty())) {
+            <mat-error>
+            @for (error of registerForm.email().errors(); track $index; let last = $last) {
+                {{ error.message }} {{ !last ? ', ' : '' }}
+            }
+            </mat-error>
+        }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Mot de passe</mat-label>
+        <input matInput [type]="hidePassword() ? 'password' : 'text'" placeholder="Votre mot de passe" [formField]="registerForm.password"/>
+        <button type="button" mat-icon-button matSuffix (click)="hidePassword.set(!hidePassword())">
+          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility'}} </mat-icon>
+        </button>
+        @if (registerForm.password().invalid() && (registerForm.password().touched() || registerForm.password().dirty())) {
+            <mat-error>
+            @for (error of registerForm.password().errors(); track $index; let last = $last) {
+              <div>{{ error.message }}{{ !last ? ', ' : '' }}</div>
+            }
+            </mat-error>
+        }
+    </mat-form-field>
+
+        <mat-form-field appearance="outline">
+        <mat-label>Confirmation du mot de passe</mat-label>
+        <input matInput [type]="hideConfirm() ? 'password' : 'text'" placeholder="Confirmez votre mot de passe" [formField]="registerForm.confirmPassword">
+        <button type="button" mat-icon-button matSuffix (click)="hideConfirm.set(!hideConfirm())">
+          <mat-icon>{{ hideConfirm() ? 'visibility_off' : 'visibility'}} </mat-icon>
+        </button>
+        @if (registerForm.confirmPassword().invalid() && (registerForm.confirmPassword().touched() || registerForm.confirmPassword().dirty())) {
+            <mat-error>
+            @for (error of registerForm.confirmPassword().errors(); track $index; let last = $last) {
+                {{ error.message }} {{ !last ? ', ' : '' }}
+            }
+            </mat-error>
+        }
+    </mat-form-field>
+
+        <mat-form-field appearance="outline">
+        <mat-label>Nom d'affichage</mat-label>
+        <input matInput placeholder="Votre nom d'affichage" [formField]="registerForm.displayName"/>
+        @if (registerForm.displayName().invalid() && (registerForm.displayName().touched() || registerForm.displayName().dirty())) {
+            <mat-error>
+            @for (error of registerForm.displayName().errors(); track $index; let last = $last) {
+                {{ error.message }} {{ !last ? ', ' : '' }}
+            }
+            </mat-error>
+        }
+    </mat-form-field>
+
+
+
+    <button
+        class="submit-btn"
+        type="button"
+        matButton="filled"
+        (click)="onSubmit()"
+        [disabled]="status() === 'submitting' || (registerForm().invalid() && (registerForm().touched() || registerForm().dirty()))">
+        S'enregistrer
+    </button>
+
+</form>

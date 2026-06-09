@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,6 +41,9 @@ public class SecurityConfig {
 	@Value("${rsa.private-key}")
 	RSAPrivateKey privateKey;
 
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -53,9 +57,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
-                        // .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                        // .anyRequest().authenticated())
-                .anyRequest().permitAll())
+                        .requestMatchers(HttpMethod.GET, "/trips").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/files/**").permitAll()
+                        .anyRequest().authenticated())
                 // connexion sans état : aucune donnée enregistrée en session pour les requêtes
                 .sessionManagement(s ->
                 s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -74,7 +78,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedOrigins(List.of(frontendUrl));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
 

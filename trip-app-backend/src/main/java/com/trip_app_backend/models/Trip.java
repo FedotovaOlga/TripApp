@@ -19,6 +19,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,8 +30,10 @@ import lombok.Setter;
 @Table(name = "trips")
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Trip {
     @Id
     @UuidGenerator
@@ -72,6 +76,8 @@ public class Trip {
     private TripStatus status;
 
     private String difficulty;
+
+    private String imageUrl;
 
     @OneToMany(mappedBy = "trip")
     private List<TripMessage> messages;
